@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "120602307027",
+    "project_id": "ecosaver-6bda2",
+    "storage_bucket": "ecosaver-6bda2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120602307027:android:df724ea11deca2051b6726",
+        "android_client_info": {
+          "package_name": "com.example.eco_saver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPYeGqiaC8noCN6el0hJT3HBy-xG_t0v4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

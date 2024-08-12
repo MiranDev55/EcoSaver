@@ -25,7 +25,7 @@ class CustomCardPattern extends StatelessWidget {
               offset: const Offset(0, 3), // Changes position of shadow
             ),
           ],
-          color: colorController.colorScheme.value.background,
+          color: colorController.colorScheme.value.surface,
         ),
         child: child,
       ),

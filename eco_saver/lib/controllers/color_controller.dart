@@ -14,16 +14,14 @@ class ColorController extends GetxController {
             Color.fromRGBO(73, 94, 87, 1), // Text color on secondary background
 
         error: Colors.red, // Default fallback for error color
-        onError: Colors.white, // Text color on error background
-
-        background: Colors.white, // Background color of scaffold
-        onBackground:
-            Color.fromRGBO(73, 94, 87, 1), // Text color on background color
+        onError: Colors.white, // Text color on background color
 
         surface: Color.fromRGBO(
             245, 247, 248, 1), // Background color of Card, Dialog, etc.
         onSurface: Color.fromRGBO(73, 94, 87, 1), // Text color on surface color
 
+        primaryContainer: Colors.white,
+        onPrimaryContainer: Color.fromRGBO(73, 94, 87, 1),
         shadow: Color.fromRGBO(158, 158, 158, 0.5)),
   );
 

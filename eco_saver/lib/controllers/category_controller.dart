@@ -1,4 +1,4 @@
-import 'package:eco_saver/models/categories.dart';
+import 'package:eco_saver/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

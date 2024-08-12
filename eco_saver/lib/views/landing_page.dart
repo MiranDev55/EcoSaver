@@ -4,7 +4,7 @@ import 'package:eco_saver/views/pages/analytics_page.dart';
 import 'package:eco_saver/views/pages/categories_page.dart';
 import 'package:eco_saver/views/pages/dashboard_page.dart';
 import 'package:eco_saver/views/pages/goal_page.dart';
-import 'package:eco_saver/views/transaction_page.dart';
+import 'package:eco_saver/views/pages/transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -72,19 +72,20 @@ class LandingPage extends StatelessWidget {
     final LandingPageController landingPageController =
         Get.put(LandingPageController(), permanent: false);
     return SafeArea(
-        child: Scaffold(
-      bottomNavigationBar:
-          buildBottomNavigationMenu(context, landingPageController),
-      body: Obx(() => IndexedStack(
-            index: landingPageController.tabIndex.value,
-            children: [
-              DashboardPage(),
-              CategoriesPage(),
-              AnalyticsPage(),
-              TransactionPage(),
-              GoalPage(),
-            ],
-          )),
-    ));
+      child: Scaffold(
+        bottomNavigationBar:
+            buildBottomNavigationMenu(context, landingPageController),
+        body: Obx(() => IndexedStack(
+              index: landingPageController.tabIndex.value,
+              children: [
+                DashboardPage(),
+                CategoriesPage(),
+                AnalyticsPage(),
+                TransactionPage(),
+                GoalPage(),
+              ],
+            )),
+      ),
+    );
   }
 }

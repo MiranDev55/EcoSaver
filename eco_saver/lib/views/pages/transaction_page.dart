@@ -1,5 +1,6 @@
 // dashboard_page.dart
 import 'package:eco_saver/controllers/color_controller.dart';
+import 'package:eco_saver/views/pages/add_expense.dart';
 import 'package:eco_saver/views/widgets/app_bar.dart';
 import 'package:eco_saver/views/widgets/expense_list.dart';
 import 'package:flutter/material.dart';
@@ -21,20 +22,22 @@ class TransactionPage extends StatelessWidget {
             Container(
               alignment: Alignment.topLeft,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => AddExpensePage());
+                },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(colorController
+                  backgroundColor: WidgetStateProperty.all(colorController
                       .colorScheme.value.secondary), // Set button color
-                  foregroundColor: MaterialStateProperty.all(colorController
+                  foregroundColor: WidgetStateProperty.all(colorController
                       .colorScheme
                       .value
                       .onSecondary), // Set text and icon color
-                  elevation: MaterialStateProperty.all(
+                  elevation: WidgetStateProperty.all(
                       2), // Control shadow beneath the button
-                  padding: MaterialStateProperty.all(
+                  padding: WidgetStateProperty.all(
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ), // Padding inside the button
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(30.0), // Rounded corners
