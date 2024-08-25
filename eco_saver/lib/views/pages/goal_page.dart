@@ -2,7 +2,7 @@
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/models/goals.dart';
 import 'package:eco_saver/views/widgets/app_bar.dart';
-import 'package:eco_saver/views/widgets/custom_card_pattern.dart';
+import 'package:eco_saver/utils/custom_container.dart';
 import 'package:eco_saver/views/widgets/goal_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,7 +22,7 @@ class GoalPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CustomCardPattern(
+              CustomContainer(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -43,7 +43,7 @@ class GoalPage extends StatelessWidget {
                   ],
                 ),
               ),
-              CustomCardPattern(
+              CustomContainer(
                   child: Column(
                 children: [
                   const SizedBox(

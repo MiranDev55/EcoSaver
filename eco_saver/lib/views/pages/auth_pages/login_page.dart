@@ -1,4 +1,5 @@
 import 'package:eco_saver/controllers/auth_controller.dart';
+import 'package:eco_saver/utils/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
@@ -127,24 +128,34 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30.0),
-              ElevatedButton(
-                onPressed: () {
-                  _authController.signIn(
-                      emailController.text, passwordController.text);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _colorController.colorScheme.value.secondary,
-                  foregroundColor:
-                      _colorController.colorScheme.value.onSecondary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     _authController.signIn(
+              //         emailController.text, passwordController.text);
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: _colorController.colorScheme.value.secondary,
+              //     foregroundColor:
+              //         _colorController.colorScheme.value.onSecondary,
+              //     shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(30.0)),
+              //     minimumSize: const Size(double.infinity, 50),
+              //   ),
+              //   child: const Text(
+              //     'Continue',
+              //     style: TextStyle(fontWeight: FontWeight.bold),
+              //   ),
+              // ),
+
+              CustomButton(
+                  onPressed: () {
+                    _authController.signIn(
+                        emailController.text, passwordController.text);
+                  },
+                  text: 'Continue',
+                  buttonStyle: CustomButtonStyle.fullWidthStyle(
+                      _colorController.colorScheme.value)),
+
               const SizedBox(height: 20.0),
               Row(
                 children: [

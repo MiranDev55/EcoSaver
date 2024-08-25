@@ -1,6 +1,12 @@
+import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/buttons_controller.dart';
+import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
+import 'package:eco_saver/controllers/total_balance_controller.dart';
+import 'package:eco_saver/controllers/transaction_controller.dart';
+import 'package:eco_saver/services/budget_service.dart';
 import 'package:eco_saver/services/expenses_service.dart';
+import 'package:eco_saver/services/incomes_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,13 +20,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  final AuthController authController = Get.put(AuthController());
+
   // Initialize GetX controllers
   Get.put(ColorController());
   Get.put(ButtonsController());
 
   Get.put(ExpenseController());
-
-  final AuthController authController = Get.put(AuthController());
+  Get.put(IncomeController()); // Register the IncomeController
+  Get.put(TransactionsController()); // Ensure this is initialized
+  Get.put(CategoryController());
+  Get.put(TotalController());
+  Get.put(BudgetService());
+  Get.put(BudgetController());
 
   runApp(MyApp(
     initialRoute: authController.isLoggedIn() ? '/landing' : '/login',

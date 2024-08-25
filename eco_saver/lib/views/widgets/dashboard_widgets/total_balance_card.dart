@@ -1,16 +1,19 @@
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/views/widgets/custom_card_pattern.dart';
+import 'package:eco_saver/controllers/total_balance_controller.dart';
+import 'package:eco_saver/utils/custom_container.dart';
+import 'package:eco_saver/views/widgets/dashboard_widgets/month_dashboard_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ToTalBalanceCard extends StatelessWidget {
-  ToTalBalanceCard({super.key});
+  ToTalBalanceCard({super.key, required this.colorController});
 
-  final ColorController colorController = Get.find<ColorController>();
+  final ColorController colorController;
+  final TotalController _totalController = Get.find<TotalController>();
 
   @override
   Widget build(BuildContext context) {
-    return CustomCardPattern(
+    return CustomContainer(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,22 +29,18 @@ class ToTalBalanceCard extends StatelessWidget {
                   color: colorController.colorScheme.value.onSurface,
                 ),
               ),
-              Text(
-                'January',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: colorController.colorScheme.value.onSurface,
-                ),
-              ),
+              MonthDashboardSelector(), // Updated to use the MonthYearSelector widget
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            '\$1800',
-            style: TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.bold,
-              color: colorController.colorScheme.value.onSurface,
+          Obx(
+            () => Text(
+              "\$${_totalController.totalBalance.value}",
+              style: TextStyle(
+                fontSize: 34,
+                fontWeight: FontWeight.bold,
+                color: colorController.colorScheme.value.onSurface,
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -55,18 +54,18 @@ class ToTalBalanceCard extends StatelessWidget {
                   color: colorController.colorScheme.value.onSurface,
                 ),
               ),
-              const Row(
+              Row(
                 children: [
-                  Text(
-                    '\$1500',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Icon(
+                  Obx(() => Text(
+                        '\$${_totalController.currentMonthTotalIncome.value}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      )),
+                  const SizedBox(width: 8),
+                  const Icon(
                     Icons.arrow_upward,
                     color: Colors.green,
                   ),
@@ -83,24 +82,24 @@ class ToTalBalanceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total Spent',
+                'Total Expenses',
                 style: TextStyle(
                   fontSize: 18,
                   color: colorController.colorScheme.value.onSurface,
                 ),
               ),
-              const Row(
+              Row(
                 children: [
-                  Text(
-                    '\$1500',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Icon(
+                  Obx(() => Text(
+                        '\$${_totalController.currentMonthTotalExpense.value}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      )),
+                  const SizedBox(width: 8),
+                  const Icon(
                     Icons.arrow_downward,
                     color: Colors.red,
                   ),

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Expense {
+class Income {
   String userId;
   double amount;
   String category;
@@ -8,7 +8,7 @@ class Expense {
   String? notes;
   DateTime createdAt;
 
-  Expense({
+  Income({
     required this.userId,
     required this.amount,
     required this.category,
@@ -17,8 +17,8 @@ class Expense {
     required this.createdAt,
   });
 
-  factory Expense.fromJson(Map<String, dynamic> json) {
-    return Expense(
+  factory Income.fromJson(Map<String, dynamic> json) {
+    return Income(
       userId: json['userId'],
       amount: json['amount'].toDouble(),
       category: json['category'],

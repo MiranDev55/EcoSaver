@@ -1,5 +1,5 @@
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/views/widgets/custom_card_pattern.dart';
+import 'package:eco_saver/utils/custom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +12,7 @@ class BudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCardPattern(
+    return CustomContainer(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

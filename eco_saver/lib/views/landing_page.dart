@@ -1,10 +1,9 @@
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/landing_page_controller.dart';
-import 'package:eco_saver/views/pages/analytics_page.dart';
-import 'package:eco_saver/views/pages/categories_page.dart';
+import 'package:eco_saver/views/pages/budget_page.dart';
 import 'package:eco_saver/views/pages/dashboard_page.dart';
 import 'package:eco_saver/views/pages/goal_page.dart';
-import 'package:eco_saver/views/pages/transaction_page.dart';
+import 'package:eco_saver/views/pages/transcription_pages/transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +24,8 @@ class LandingPage extends StatelessWidget {
 
   Obx buildBottomNavigationMenu(
       context, LandingPageController landingPageController) {
-    return Obx(() => MediaQuery(
+    return Obx(
+      () => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(textScaler: const TextScaler.linear(1.0)),
         child: BottomNavigationBar(
@@ -46,12 +46,7 @@ class LandingPage extends StatelessWidget {
             BottomNavigationBarItem(
               backgroundColor: _colorController.colorScheme.value.surface,
               icon: const Icon(Icons.category),
-              label: 'Categories',
-            ),
-            BottomNavigationBarItem(
-              backgroundColor: _colorController.colorScheme.value.surface,
-              icon: const Icon(Icons.analytics),
-              label: 'Analytics',
+              label: 'Budgets',
             ),
             BottomNavigationBarItem(
               backgroundColor: _colorController.colorScheme.value.surface,
@@ -64,7 +59,9 @@ class LandingPage extends StatelessWidget {
               label: 'Goals',
             ),
           ],
-        )));
+        ),
+      ),
+    );
   }
 
   @override
@@ -75,16 +72,17 @@ class LandingPage extends StatelessWidget {
       child: Scaffold(
         bottomNavigationBar:
             buildBottomNavigationMenu(context, landingPageController),
-        body: Obx(() => IndexedStack(
-              index: landingPageController.tabIndex.value,
-              children: [
-                DashboardPage(),
-                CategoriesPage(),
-                AnalyticsPage(),
-                TransactionPage(),
-                GoalPage(),
-              ],
-            )),
+        body: Obx(
+          () => IndexedStack(
+            index: landingPageController.tabIndex.value,
+            children: [
+              DashboardPage(),
+              BudgetPage(),
+              TransactionPage(),
+              GoalPage(),
+            ],
+          ),
+        ),
       ),
     );
   }

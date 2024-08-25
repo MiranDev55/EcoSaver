@@ -5,7 +5,10 @@ class ButtonsController extends GetxController {
 
   var analystToggleSwitch = 2.obs; // Initially, its on Popular
 
-  var categoryToggleSwitch = 0.obs; // Initially, its on Popular
+  var categoryToggleSwitch = 0.obs; // Initially, its on Expense
+
+  // Transaction Floating Button TFB
+  var isTFBExpanded = false.obs;
 
   void updatePillButton(int index) {
     pillButton.value = index; // Update the selected index
@@ -17,5 +20,13 @@ class ButtonsController extends GetxController {
 
   void updateCategoryToggleSwitch(int index) {
     categoryToggleSwitch.value = index; // Update the selected index
+  }
+
+  void toggleTFB() {
+    isTFBExpanded.value = !isTFBExpanded.value;
+  }
+
+  void closeTFB() {
+    isTFBExpanded.value = false;
   }
 }

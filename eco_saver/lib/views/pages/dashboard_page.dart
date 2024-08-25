@@ -17,12 +17,14 @@ class DashboardPage extends StatelessWidget {
         title: "Dashboard",
       ),
       backgroundColor: colorController.colorScheme.value.surface,
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ToTalBalanceCard(), // total balance.
+              ToTalBalanceCard(
+                colorController: colorController,
+              ), // total balance.
               NextGoalCard(), // basic bar analytics
               //BudgetCard(),
             ],

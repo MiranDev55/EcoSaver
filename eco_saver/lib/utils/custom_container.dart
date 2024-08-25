@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class CustomCardPattern extends StatelessWidget {
-  CustomCardPattern({super.key, required this.child});
+class CustomContainer extends StatelessWidget {
+  CustomContainer({super.key, required this.child});
   final ColorController colorController = Get.find<ColorController>();
   final Widget child;
 
@@ -25,7 +25,7 @@ class CustomCardPattern extends StatelessWidget {
               offset: const Offset(0, 3), // Changes position of shadow
             ),
           ],
-          color: colorController.colorScheme.value.surface,
+          color: colorController.colorScheme.value.primaryContainer,
         ),
         child: child,
       ),

@@ -3,12 +3,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/color_controller.dart';
+import '../../../controllers/color_controller.dart';
 
-class CategoryPieChart extends StatelessWidget {
+class BudgetPie extends StatelessWidget {
   final CategoryController categoryController;
   final ColorController colorController;
-  const CategoryPieChart(
+  const BudgetPie(
       {super.key,
       required this.categoryController,
       required this.colorController});
