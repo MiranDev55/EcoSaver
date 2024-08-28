@@ -9,70 +9,82 @@ class TransactionsController extends GetxController {
   final ExpenseController expenseController = Get.find<ExpenseController>();
   final IncomeController incomeController = Get.find<IncomeController>();
 
-  RxList<dynamic> transactions = RxList<dynamic>();
+  RxMap<String, Expense> expenses =
+      RxMap<String, Expense>(); // Store with doc ID
+  RxMap<String, Income> incomes = RxMap<String, Income>(); // Store with doc ID
 
-  bool isInitExpense = true;
-  bool isInitIncome = true;
+  DateTime chosenDate = DateTime.now();
 
   @override
   void onInit() {
     super.onInit();
 
     ever(expenseController.monthlyExpense,
-        (Map<String, List<Expense>> expense) {
-      // Automatically update transactions when monthlyExpense cache changes.
-      if (isInitExpense) {
-        isInitExpense = false;
-        _updateTransactionsForCurrentMonth();
-      }
+        (Map<String, Map<String, List<Expense>>> expenseMap) {
+      filterExpensesByMonth(chosenDate);
+      //_updateExpensesForCurrentMonth();
     });
 
-    ever(incomeController.monthlyIncome, (Map<String, List<Income>> income) {
-      // Automatically update transactions when monthlyIncome cache changes.
-
-      if (isInitIncome) {
-        isInitIncome = false;
-        _updateTransactionsForCurrentMonth();
-      }
+    ever(incomeController.monthlyIncome,
+        (Map<String, Map<String, List<Income>>> incomeMap) {
+      filterIncomesByMonth(chosenDate);
+      //_updateIncomesForCurrentMonth();
     });
   }
 
-  void _updateTransactionsForCurrentMonth() {
-    // Assuming a method or a variable to get the currently selected date.
-    DateTime selectedDate =
-        DateTime.now(); // Replace with actual selected date logic.
-    filterTransactionsByMonth(selectedDate);
-  }
+  void filterExpensesByMonth(DateTime selectedDate) {
+    chosenDate = selectedDate;
+    String dateKey = '${selectedDate.year}-${selectedDate.month}';
 
-  void filterTransactionsByMonth(DateTime selectedDate) {
-    String? dateKey = '${selectedDate.year}-${selectedDate.month}';
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-
-    // Clear the transactions list
-    transactions.clear();
-
-    List<dynamic> combined = [];
-
-    // Check if expenses for the selected month are cached and add them
     if (expenseController.monthlyExpense.containsKey(dateKey)) {
-      combined.addAll(expenseController.monthlyExpense[dateKey]!);
+      expenses.clear();
+      expenseController.monthlyExpense[dateKey]!.forEach((docId, expenseList) {
+        for (var expense in expenseList) {
+          expenses[docId] = expense; // Store each expense with its doc ID
+        }
+      });
     } else {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
       expenseController.getUserExpensesForMonth(
           uid, selectedDate.year, selectedDate.month);
     }
+  }
 
-    // Check if incomes for the selected month are cached and add them
+  void filterIncomesByMonth(DateTime selectedDate) {
+    String dateKey = '${selectedDate.year}-${selectedDate.month}';
+    incomes.clear();
+
     if (incomeController.monthlyIncome.containsKey(dateKey)) {
-      combined.addAll(incomeController.monthlyIncome[dateKey]!);
+      incomeController.monthlyIncome[dateKey]!.forEach((docId, incomeList) {
+        for (var income in incomeList) {
+          incomes[docId] = income; // Store each income with its doc ID
+        }
+      });
     } else {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
       incomeController.getUserIncomesForMonth(
           uid, selectedDate.year, selectedDate.month);
     }
+  }
 
-    // Sort by date if needed
-    combined.sort((a, b) => b.date.compareTo(a.date));
+  // Method to get a combined and sorted list of transactions with their document IDs
+  List<Map<String, dynamic>> getCombinedSortedTransactions() {
+    List<Map<String, dynamic>> combined = [];
 
-    // Update transactions list with the combined data
-    transactions.addAll(combined);
+    // Add all expenses with their doc IDs
+    expenses.forEach((docId, expense) {
+      combined.add({'id': docId, 'transaction': expense});
+    });
+
+    // Add all incomes with their doc IDs
+    incomes.forEach((docId, income) {
+      combined.add({'id': docId, 'transaction': income});
+    });
+
+    // Sort combined list by date
+    combined
+        .sort((a, b) => b['transaction'].date.compareTo(a['transaction'].date));
+
+    return combined;
   }
 }

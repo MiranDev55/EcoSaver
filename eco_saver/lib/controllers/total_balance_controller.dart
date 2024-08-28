@@ -53,24 +53,29 @@ class TotalController extends GetxController {
     List<Expense> monthExpenses = [];
     List<Income> monthIncomes = [];
 
+    // Aggregate all expenses for the selected month
     if (expenseController.monthlyExpense.containsKey(dateKey)) {
-      //monthExpenses = expenseController.monthlyExpense[dateKey]!;
+      expenseController.monthlyExpense[dateKey]!.forEach((docId, expenseList) {
+        monthExpenses.addAll(expenseList);
+      });
     } else {
-      expenseController.getUserExpensesForMonth(
+      // If not cached, trigger the fetch and exit the method early
+      await expenseController.getUserExpensesForMonth(
           authController.userId.value, year, month);
       return;
     }
 
+    // Aggregate all incomes for the selected month
     if (incomeController.monthlyIncome.containsKey(dateKey)) {
-      monthIncomes = incomeController.monthlyIncome[dateKey]!;
+      incomeController.monthlyIncome[dateKey]!.forEach((docId, incomeList) {
+        monthIncomes.addAll(incomeList);
+      });
     } else {
-      incomeController.getUserIncomesForMonth(
+      // If not cached, trigger the fetch and exit the method early
+      await incomeController.getUserIncomesForMonth(
           authController.userId.value, year, month);
       return;
     }
-    // List<Expense> monthExpenses =
-    //     expenseController.monthlyExpense[dateKey] ?? [];
-    // List<Income> monthIncomes = incomeController.monthlyIncome[dateKey] ?? [];
 
     // Calculate the totals
     double totalExpense =

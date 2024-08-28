@@ -1,20 +1,18 @@
-import 'package:eco_saver/controllers/buttons_controller.dart';
-import 'package:eco_saver/views/widgets/budget_widgets/budget_list.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/utils/custom_container.dart';
-import 'package:eco_saver/views/widgets/budget_widgets/budget_pie.dart';
+import 'package:eco_saver/utils/input_decoration.dart';
 import 'package:eco_saver/views/widgets/app_bar.dart';
-import '../widgets/toggle_switch_button.dart';
+import 'package:eco_saver/views/widgets/budget_widgets/budget_list.dart';
+import 'package:eco_saver/views/widgets/budget_widgets/budget_pie.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class BudgetPage extends StatelessWidget {
   final ColorController colorController = Get.find<ColorController>();
   final CategoryController categoryController = Get.find<CategoryController>();
   final BudgetController budgetController = Get.find<BudgetController>();
-  final ButtonsController buttonsController = Get.find<ButtonsController>();
 
   BudgetPage({super.key});
 
@@ -41,37 +39,6 @@ class BudgetPage extends StatelessWidget {
                 CustomContainer(
                   child: Column(
                     children: [
-                      IntrinsicWidth(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: colorController.colorScheme.value.primary,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SelectableButton(
-                                text: "Expense",
-                                index: 0,
-                                controller: buttonsController,
-                                colorController: colorController,
-                                pageSource: 0,
-                              ),
-                              SelectableButton(
-                                text: "Income",
-                                index: 1,
-                                controller: buttonsController,
-                                colorController: colorController,
-                                pageSource: 0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      // List of categories with budget info
                       BudgetList(
                         categoryController: categoryController,
                         budgetController: budgetController,
@@ -84,6 +51,98 @@ class BudgetPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     _showAddBudgetDialog(context);
+      //   },
+      //   backgroundColor: colorController.colorScheme.value.secondary,
+      //   child: Icon(
+      //     Icons.add,
+      //     color: colorController.colorScheme.value.onSecondary,
+      //   ),
+      // ),
+    );
+  }
+
+  void _showAddBudgetDialog(BuildContext context) {
+    final TextEditingController budgetTextController = TextEditingController();
+    String? selectedCategory;
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Add New Budget'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownButtonFormField<String>(
+              decoration: customInputDecoration(
+                labelText: 'Select Category',
+                borderColor: colorController.colorScheme.value.onSecondary,
+                focusedBorderColor: colorController.colorScheme.value.secondary,
+                focusedLabelColor:
+                    colorController.colorScheme.value.onSecondary,
+              ),
+              items: categoryController.expenseCategories
+                  .map((category) => DropdownMenuItem<String>(
+                        value: category.name,
+                        child: Text(category.name),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                selectedCategory = value;
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select a category';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: budgetTextController,
+              keyboardType: TextInputType.number,
+              decoration: customInputDecoration(
+                labelText: 'Budget Amount',
+                borderColor: colorController.colorScheme.value.onSecondary,
+                focusedBorderColor: colorController.colorScheme.value.secondary,
+                focusedLabelColor:
+                    colorController.colorScheme.value.onSecondary,
+              ),
+              style: TextStyle(
+                color: colorController.colorScheme.value.onSecondary,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(); // Close the dialog
+            },
+            child: Text(
+              'Cancel',
+              style:
+                  TextStyle(color: colorController.colorScheme.value.secondary),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (selectedCategory != null) {
+                double amount =
+                    double.tryParse(budgetTextController.text) ?? 0.0;
+                budgetController.createBudget(selectedCategory!, amount);
+                Get.back(); // Close the dialog after saving
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorController.colorScheme.value.secondary,
+              foregroundColor: colorController.colorScheme.value.onSecondary,
+            ),
+            child: const Text('Add Budget'),
+          ),
+        ],
       ),
     );
   }

@@ -2,10 +2,12 @@ import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/buttons_controller.dart';
 import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
+import 'package:eco_saver/controllers/goal_controller.dart';
 import 'package:eco_saver/controllers/total_balance_controller.dart';
 import 'package:eco_saver/controllers/transaction_controller.dart';
 import 'package:eco_saver/services/budget_service.dart';
 import 'package:eco_saver/services/expenses_service.dart';
+import 'package:eco_saver/services/goal_service.dart';
 import 'package:eco_saver/services/incomes_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,8 @@ void main() async {
   Get.put(TotalController());
   Get.put(BudgetService());
   Get.put(BudgetController());
+  Get.put(GoalService());
+  Get.put(GoalController());
 
   runApp(MyApp(
     initialRoute: authController.isLoggedIn() ? '/landing' : '/login',

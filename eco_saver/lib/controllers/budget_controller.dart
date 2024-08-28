@@ -15,6 +15,9 @@ class BudgetController extends GetxController {
   // A map to hold the amount spent in each category (e.g., "Groceries" -> 50.0)
   RxMap<String, double> spent = <String, double>{}.obs;
 
+  // Holds the index of the currently touched section in the pie chart
+  RxInt pieChartTouchedIndex = (-1).obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -24,10 +27,13 @@ class BudgetController extends GetxController {
       _calculateSpendingForCurrentMonth();
     });
 
+    ever(budgetService.categoryBudgets, (_) {
+      _calculateSpendingForCurrentMonth();
+    });
+
     // Listen to user ID changes to load the corresponding budgets
     ever(authController.userId, (String userId) {
       if (userId.isNotEmpty) {
-        //print("listening to load all budgets");
         _loadBudgets(userId);
       } else {
         budgets.clear();
@@ -76,10 +82,12 @@ class BudgetController extends GetxController {
   // Calculate the spending for the current month
   void _calculateSpendingForCurrentMonth() {
     spent.clear();
-    expenseController.monthlyExpense.forEach((_, expenses) {
-      for (Expense expense in expenses) {
-        updateSpending(expense.category, expense.amount);
-      }
+    expenseController.monthlyExpense.forEach((_, docMap) {
+      docMap.forEach((docId, expenses) {
+        for (Expense expense in expenses) {
+          updateSpending(expense.category, expense.amount);
+        }
+      });
     });
   }
 
@@ -97,5 +105,10 @@ class BudgetController extends GetxController {
     double budget = budgets[category] ?? 0.0;
     double spentAmount = spent[category] ?? 0.0;
     return budget - spentAmount;
+  }
+
+  // Method to update the touched index
+  void updatePieChartTouchedIndex(int index) {
+    pieChartTouchedIndex.value = index;
   }
 }

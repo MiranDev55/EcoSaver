@@ -28,6 +28,8 @@ class BudgetService extends GetxService {
         'dateCreated': DateTime.now(),
         'dateModified': DateTime.now(),
       };
+
+      categoryBudgets.refresh();
     } catch (e) {
       // ignore: avoid_print
       print('Error creating budget: $e');
@@ -73,6 +75,8 @@ class BudgetService extends GetxService {
 
       // Remove from local cache
       categoryBudgets.remove(category);
+
+      //categoryBudgets.refresh();
     } catch (e) {
       // ignore: avoid_print
       print('Error deleting budget: $e');

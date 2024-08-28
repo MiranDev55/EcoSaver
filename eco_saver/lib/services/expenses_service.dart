@@ -7,8 +7,9 @@ class ExpenseController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final AuthController authController = Get.find<AuthController>();
 
-  RxMap<String, List<Expense>> monthlyExpense =
-      RxMap<String, List<Expense>>(); // Cache to store expenses by month
+  // Cache to store expenses by month and document ID
+  RxMap<String, Map<String, List<Expense>>> monthlyExpense =
+      RxMap<String, Map<String, List<Expense>>>();
 
   @override
   void onInit() {
@@ -38,7 +39,8 @@ class ExpenseController extends GetxController {
     if (monthlyExpense.containsKey(cacheKey)) {
       // Transform cached data into a list of map with id and model instance
       return monthlyExpense[cacheKey]!
-          .map((expense) => {expense.createdAt.toString(): expense})
+          .entries
+          .map((entry) => {entry.key: entry.value.first})
           .toList();
     }
 
@@ -51,18 +53,16 @@ class ExpenseController extends GetxController {
           .collection('user expenses')
           .get();
 
-      List<Map<String, Expense>> monthExpenses = snapshot.docs.map((doc) {
-        final expense = Expense.fromJson(doc.data());
-        return {
-          doc.id: expense
-        }; // Return a map with the document ID as the key
-      }).toList();
+      Map<String, List<Expense>> monthExpenses = {
+        for (var doc in snapshot.docs) doc.id: [Expense.fromJson(doc.data())]
+      };
 
       // Cache the expenses for this month
-      monthlyExpense[cacheKey] =
-          monthExpenses.map((map) => map.values.first).toList();
+      monthlyExpense[cacheKey] = monthExpenses;
 
-      return monthExpenses;
+      return monthExpenses.entries
+          .map((entry) => {entry.key: entry.value.first})
+          .toList();
     } catch (e) {
       // ignore: avoid_print
       print('Error retrieving expenses: $e');
@@ -71,32 +71,43 @@ class ExpenseController extends GetxController {
   }
 
   // Create an expense for a specific user in a specific year and month
-  Future<void> createExpense(Expense expense) async {
+  Future<String?> createExpense(Expense expense) async {
     try {
       String dateKey = '${expense.date.year}-${expense.date.month}';
 
-      // Add the expense to Firestore
-      await _db
+      // Create a reference to the new document
+      DocumentReference docRef = _db
           .collection('expenses')
           .doc(expense.userId)
           .collection('${expense.date.year}')
           .doc('${expense.date.month}')
           .collection('user expenses')
-          .doc() // Firestore generates a unique ID for each expense
-          .set(expense.toJson());
+          .doc();
+
+      // Set the expense data to the document
+      await docRef.set(expense.toJson());
+
+      String documentId = docRef.id;
 
       // If the Firestore operation is successful, update the cache
       if (monthlyExpense.containsKey(dateKey)) {
-        final updatedList = List<Expense>.from(monthlyExpense[dateKey]!);
-        updatedList.add(expense);
-        monthlyExpense[dateKey] = updatedList; // Reassign to trigger ever
+        if (monthlyExpense[dateKey]!.containsKey(documentId)) {
+          monthlyExpense[dateKey]![documentId]!.add(expense);
+        } else {
+          monthlyExpense[dateKey]![documentId] = [expense];
+        }
       } else {
-        monthlyExpense[dateKey] = [expense]; // Direct assignment triggers ever
+        monthlyExpense[dateKey] = {
+          documentId: [expense]
+        };
       }
+
+      return documentId;
     } catch (e) {
       // Handle any errors that occur during the Firestore operation
       // ignore: avoid_print
       print('Error adding expense: $e');
+      return null;
     }
   }
 
@@ -107,8 +118,7 @@ class ExpenseController extends GetxController {
 
     // First, check the cache
     if (monthlyExpense.containsKey(cacheKey)) {
-      var cachedExpense = monthlyExpense[cacheKey]!.firstWhereOrNull(
-          (expense) => expense.createdAt.toString() == expenseId);
+      var cachedExpense = monthlyExpense[cacheKey]![expenseId]?.first;
       if (cachedExpense != null) {
         return cachedExpense;
       }
@@ -128,7 +138,17 @@ class ExpenseController extends GetxController {
         Expense expense = Expense.fromJson(snapshot.data()!);
 
         // Optionally, update the cache
-        monthlyExpense[cacheKey]!.add(expense);
+        if (monthlyExpense.containsKey(cacheKey)) {
+          if (monthlyExpense[cacheKey]!.containsKey(expenseId)) {
+            monthlyExpense[cacheKey]![expenseId]!.add(expense);
+          } else {
+            monthlyExpense[cacheKey]![expenseId] = [expense];
+          }
+        } else {
+          monthlyExpense[cacheKey] = {
+            expenseId: [expense]
+          };
+        }
 
         return expense;
       }
@@ -156,11 +176,11 @@ class ExpenseController extends GetxController {
 
       // If the Firestore operation is successful, update the cache
       if (monthlyExpense.containsKey(cacheKey)) {
-        var index = monthlyExpense[cacheKey]!
-            .indexWhere((e) => e.createdAt.toString() == expenseId);
-        if (index != -1) {
-          // Update the existing expense in the cache
-          monthlyExpense[cacheKey]![index] = expense;
+        if (monthlyExpense[cacheKey]!.containsKey(expenseId)) {
+          monthlyExpense[cacheKey]![expenseId] = [expense];
+
+          // Notify that the map has been updated
+          monthlyExpense.refresh();
         }
       }
     } catch (e) {
@@ -188,8 +208,7 @@ class ExpenseController extends GetxController {
 
       // If the Firestore operation is successful, remove the expense from the cache
       if (monthlyExpense.containsKey(cacheKey)) {
-        monthlyExpense[cacheKey]!.removeWhere(
-            (expense) => expense.createdAt.toString() == expenseId);
+        monthlyExpense[cacheKey]!.remove(expenseId);
       }
     } catch (e) {
       // Handle any errors that occur during the Firestore operation

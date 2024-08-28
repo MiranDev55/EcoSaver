@@ -7,8 +7,9 @@ class IncomeController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final AuthController authController = Get.find<AuthController>();
 
-  RxMap<String, List<Income>> monthlyIncome =
-      RxMap<String, List<Income>>(); // Cache to store incomes by month
+  // Cache to store incomes by month and document ID
+  RxMap<String, Map<String, List<Income>>> monthlyIncome =
+      RxMap<String, Map<String, List<Income>>>();
 
   @override
   void onInit() {
@@ -38,7 +39,8 @@ class IncomeController extends GetxController {
     if (monthlyIncome.containsKey(cacheKey)) {
       // Transform cached data into a list of map with id and model instance
       return monthlyIncome[cacheKey]!
-          .map((income) => {income.createdAt.toString(): income})
+          .entries
+          .map((entry) => {entry.key: entry.value.first})
           .toList();
     }
 
@@ -51,16 +53,16 @@ class IncomeController extends GetxController {
           .collection('user incomes')
           .get();
 
-      List<Map<String, Income>> monthIncomes = snapshot.docs.map((doc) {
-        final income = Income.fromJson(doc.data());
-        return {doc.id: income}; // Return a map with the document ID as the key
-      }).toList();
+      Map<String, List<Income>> monthIncomes = {
+        for (var doc in snapshot.docs) doc.id: [Income.fromJson(doc.data())]
+      };
 
       // Cache the incomes for this month
-      monthlyIncome[cacheKey] =
-          monthIncomes.map((map) => map.values.first).toList();
+      monthlyIncome[cacheKey] = monthIncomes;
 
-      return monthIncomes;
+      return monthIncomes.entries
+          .map((entry) => {entry.key: entry.value.first})
+          .toList();
     } catch (e) {
       // ignore: avoid_print
       print('Error retrieving incomes: $e');
@@ -69,50 +71,54 @@ class IncomeController extends GetxController {
   }
 
   // Create an income for a specific user in a specific year and month
-  Future<void> createIncome(Income income) async {
+  Future<String?> createIncome(Income income) async {
     try {
       String dateKey = '${income.date.year}-${income.date.month}';
 
-      // Add the income to Firestore
-      await _db
+      // Create a reference to the new document
+      DocumentReference docRef = _db
           .collection('incomes')
           .doc(income.userId)
           .collection('${income.date.year}')
           .doc('${income.date.month}')
           .collection('user incomes')
-          .doc() // Firestore generates a unique ID for each income
-          .set(income.toJson());
+          .doc();
+
+      // Set the income data to the document
+      await docRef.set(income.toJson());
+
+      String documentId = docRef.id;
 
       // If the Firestore operation is successful, update the cache
       if (monthlyIncome.containsKey(dateKey)) {
-        // Create a new list to ensure that RxMap detects the change
-        final updatedList = List<Income>.from(monthlyIncome[dateKey]!);
-        updatedList.add(income);
-        monthlyIncome[dateKey] = updatedList; // Reassign to trigger ever
+        if (monthlyIncome[dateKey]!.containsKey(documentId)) {
+          monthlyIncome[dateKey]![documentId]!.add(income);
+        } else {
+          monthlyIncome[dateKey]![documentId] = [income];
+        }
       } else {
-        monthlyIncome[dateKey] = [income]; // Direct assignment triggers ever
+        monthlyIncome[dateKey] = {
+          documentId: [income]
+        };
       }
+
+      return documentId;
     } catch (e) {
       // Handle any errors that occur during the Firestore operation
       // ignore: avoid_print
       print('Error adding income: $e');
+      return null;
     }
   }
 
-  // Get incomes for the currently cached months (optional helper method)
-  List<Income> getCachedIncomesForMonth(int year, int month) {
-    String dateKey = '$year-$month';
-    return monthlyIncome[dateKey] ?? [];
-  }
-
+  // Get an income by ID under a specific user, year, and month
   Future<Income?> getIncome(
       String userId, int year, int month, String incomeId) async {
     String cacheKey = '$year-$month';
 
     // First, check the cache
     if (monthlyIncome.containsKey(cacheKey)) {
-      var cachedIncome = monthlyIncome[cacheKey]!.firstWhereOrNull(
-          (income) => income.createdAt.toString() == incomeId);
+      var cachedIncome = monthlyIncome[cacheKey]![incomeId]?.first;
       if (cachedIncome != null) {
         return cachedIncome;
       }
@@ -132,7 +138,17 @@ class IncomeController extends GetxController {
         Income income = Income.fromJson(snapshot.data()!);
 
         // Optionally, update the cache
-        monthlyIncome[cacheKey]!.add(income);
+        if (monthlyIncome.containsKey(cacheKey)) {
+          if (monthlyIncome[cacheKey]!.containsKey(incomeId)) {
+            monthlyIncome[cacheKey]![incomeId]!.add(income);
+          } else {
+            monthlyIncome[cacheKey]![incomeId] = [income];
+          }
+        } else {
+          monthlyIncome[cacheKey] = {
+            incomeId: [income]
+          };
+        }
 
         return income;
       }
@@ -143,10 +159,13 @@ class IncomeController extends GetxController {
     return null;
   }
 
+  // Update an income
   Future<void> updateIncome(Income income, String incomeId) async {
     String cacheKey = '${income.date.year}-${income.date.month}';
 
     try {
+      //print("id = $incomeId");
+      //print("before updating");
       // Update the income in Firestore
       await _db
           .collection('incomes')
@@ -157,13 +176,15 @@ class IncomeController extends GetxController {
           .doc(incomeId)
           .update(income.toJson());
 
+      //print("after updating");
+
       // If the Firestore operation is successful, update the cache
       if (monthlyIncome.containsKey(cacheKey)) {
-        var index = monthlyIncome[cacheKey]!
-            .indexWhere((i) => i.createdAt.toString() == incomeId);
-        if (index != -1) {
-          // Update the existing income in the cache
-          monthlyIncome[cacheKey]![index] = income;
+        if (monthlyIncome[cacheKey]!.containsKey(incomeId)) {
+          monthlyIncome[cacheKey]![incomeId] = [income];
+
+          // Notify that the map has been updated
+          monthlyIncome.refresh();
         }
       }
     } catch (e) {
@@ -173,6 +194,7 @@ class IncomeController extends GetxController {
     }
   }
 
+  // Delete an income
   Future<void> deleteIncome(
       String userId, int year, int month, String incomeId) async {
     String cacheKey = '$year-$month';
@@ -190,8 +212,7 @@ class IncomeController extends GetxController {
 
       // If the Firestore operation is successful, remove the income from the cache
       if (monthlyIncome.containsKey(cacheKey)) {
-        monthlyIncome[cacheKey]!
-            .removeWhere((income) => income.createdAt.toString() == incomeId);
+        monthlyIncome[cacheKey]!.remove(incomeId);
       }
     } catch (e) {
       // Handle any errors that occur during the Firestore operation

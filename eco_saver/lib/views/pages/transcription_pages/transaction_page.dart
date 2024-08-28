@@ -33,8 +33,9 @@ class TransactionPage extends StatelessWidget {
                 TransactionDateSelector(
                   initialDate: DateTime.now(),
                   onMonthChanged: (selectedDate) {
-                    transactionsController
-                        .filterTransactionsByMonth(selectedDate);
+                    // Update both expenses and incomes for the selected month
+                    transactionsController.filterExpensesByMonth(selectedDate);
+                    transactionsController.filterIncomesByMonth(selectedDate);
                   },
                 ),
                 Expanded(
@@ -54,9 +55,12 @@ class TransactionPage extends StatelessWidget {
           floatingButtonController.toggleTFB();
         },
         backgroundColor: colorController.colorScheme.value.secondary,
-        child: Obx(() => Icon(floatingButtonController.isTFBExpanded.value
-            ? Icons.close
-            : Icons.add)),
+        child: Obx(() => Icon(
+              floatingButtonController.isTFBExpanded.value
+                  ? Icons.close
+                  : Icons.add,
+              color: colorController.colorScheme.value.onSecondary,
+            )),
       ),
     );
   }

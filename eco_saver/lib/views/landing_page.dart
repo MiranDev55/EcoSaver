@@ -2,7 +2,7 @@ import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/landing_page_controller.dart';
 import 'package:eco_saver/views/pages/budget_page.dart';
 import 'package:eco_saver/views/pages/dashboard_page.dart';
-import 'package:eco_saver/views/pages/goal_page.dart';
+import 'package:eco_saver/views/pages/goal_pages/goal_page.dart';
 import 'package:eco_saver/views/pages/transcription_pages/transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

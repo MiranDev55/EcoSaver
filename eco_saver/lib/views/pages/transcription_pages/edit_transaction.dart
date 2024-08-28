@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-// ignore: must_be_immutable
 class EditTransactionPage extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ExpenseController expenseController = Get.find<ExpenseController>();
@@ -26,27 +25,29 @@ class EditTransactionPage extends StatelessWidget {
   final Expense? expense;
   final Income? income;
   final String title;
+  final String id;
 
-  String? selectedCategory;
+  final RxnString selectedCategory = RxnString();
 
   EditTransactionPage({
     super.key,
     this.expense,
     this.income,
     required this.title,
+    required this.id,
   }) {
     if (expense != null) {
       amountController.text = expense!.amount.toString();
       notesController.text = expense!.notes ?? '';
       dateController.text = DateFormat('yyyy-MM-dd').format(expense!.date);
       timeController.text = DateFormat('HH:mm').format(expense!.date);
-      selectedCategory = expense!.category;
+      selectedCategory.value = expense!.category;
     } else if (income != null) {
       amountController.text = income!.amount.toString();
       notesController.text = income!.notes ?? '';
       dateController.text = DateFormat('yyyy-MM-dd').format(income!.date);
       timeController.text = DateFormat('HH:mm').format(income!.date);
-      selectedCategory = income!.category;
+      selectedCategory.value = income!.category;
     }
   }
 
@@ -84,7 +85,7 @@ class EditTransactionPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
-                value: selectedCategory,
+                value: selectedCategory.value,
                 decoration: customInputDecoration(
                     labelText: 'Category',
                     borderColor: _colorController.colorScheme.value.onSecondary,
@@ -94,7 +95,7 @@ class EditTransactionPage extends StatelessWidget {
                         _colorController.colorScheme.value.onSecondary),
                 items: category(),
                 onChanged: (String? newValue) {
-                  selectedCategory = newValue;
+                  selectedCategory.value = newValue;
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -184,31 +185,57 @@ class EditTransactionPage extends StatelessWidget {
                         _colorController.colorScheme.value.onSecondary),
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                width: 150,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _updateTransaction();
-                      Get.back(); // Go back after updating
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _colorController.colorScheme.value.secondary,
-                    foregroundColor:
-                        _colorController.colorScheme.value.onSecondary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    minimumSize: const Size(double.infinity, 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _updateTransaction();
+                          Get.back(); // Go back after updating
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _colorController.colorScheme.value.secondary,
+                        foregroundColor:
+                            _colorController.colorScheme.value.onSecondary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0)),
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: Text(
+                        'Update',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color:
+                                _colorController.colorScheme.value.onSecondary),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    'Update Transaction',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: _colorController.colorScheme.value.onSecondary),
+                  SizedBox(
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        deletePopup();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0)),
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -271,19 +298,79 @@ class EditTransactionPage extends StatelessWidget {
     if (expense != null) {
       Expense updatedExpense = expense!;
       updatedExpense.amount = double.parse(amountController.text.trim());
-      updatedExpense.category = selectedCategory ?? expense!.category;
+      updatedExpense.category = selectedCategory.value ?? expense!.category;
       updatedExpense.date = finalDateTime;
       updatedExpense.notes = notesController.text.trim();
 
-      expenseController.updateExpense(updatedExpense, "");
+      expenseController.updateExpense(updatedExpense, id);
     } else if (income != null) {
       Income updatedIncome = income!;
       updatedIncome.amount = double.parse(amountController.text.trim());
-      updatedIncome.category = selectedCategory ?? income!.category;
+      updatedIncome.category = selectedCategory.value ?? income!.category;
       updatedIncome.date = finalDateTime;
       updatedIncome.notes = notesController.text.trim();
 
-      incomeController.updateIncome(updatedIncome, "");
+      incomeController.updateIncome(updatedIncome, id);
+    }
+  }
+
+  void deletePopup() => Get.dialog(
+        AlertDialog(
+          title: Column(
+            children: [
+              Icon(Icons.delete_outline,
+                  size: 50,
+                  color: _colorController.colorScheme.value.secondary),
+              const SizedBox(height: 10),
+              Text(
+                'Delete Note',
+                style: TextStyle(
+                  color: _colorController.colorScheme.value.secondary,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Deleting a note will permanently remove it from your library.',
+            style: TextStyle(
+                fontSize: 16,
+                color: _colorController.colorScheme.value.onSecondary),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Get.back(); // Close the dialog
+                Get.back(); // Close the current page
+              },
+              child: Text(
+                'No, Keep Note',
+                style: TextStyle(
+                    color: _colorController.colorScheme.value.onSecondary
+                        .withOpacity(0.75)),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteTransaction(); // Call your delete method
+                Get.back(); // Close the dialog
+              },
+              child: const Text(
+                'Yes, Delete Note',
+                style: TextStyle(color: Colors.pink),
+              ),
+            ),
+          ],
+        ),
+      );
+  void _deleteTransaction() {
+    if (expense != null) {
+      expenseController.deleteExpense(
+          expense!.userId, expense!.date.year, expense!.date.month, id);
+    } else if (income != null) {
+      incomeController.deleteIncome(
+          income!.userId, income!.date.year, income!.date.month, id);
     }
   }
 }
