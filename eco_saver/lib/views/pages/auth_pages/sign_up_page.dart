@@ -1,14 +1,16 @@
-import 'package:eco_saver/controllers/auth_controller.dart';
+import 'dart:io';
 import 'package:eco_saver/controllers/color_controller.dart';
+import 'package:eco_saver/controllers/signup_controller.dart';
+import 'package:eco_saver/services/auth_service.dart';
+import 'package:eco_saver/utils/input_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignupPage extends StatelessWidget {
-  final AuthController authController = Get.find<AuthController>();
+  final AuthService authController = Get.find<AuthService>();
   final ColorController _colorController = Get.find<ColorController>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  final SignupController signupController = Get.put(SignupController());
 
   SignupPage({super.key});
 
@@ -25,7 +27,6 @@ class SignupPage extends StatelessWidget {
               Center(
                 child: Stack(
                   children: <Widget>[
-                    // Stroked text as border.
                     Text(
                       'Create Account',
                       style: TextStyle(
@@ -34,11 +35,9 @@ class SignupPage extends StatelessWidget {
                         foreground: Paint()
                           ..style = PaintingStyle.stroke
                           ..strokeWidth = 4
-                          ..color = _colorController.colorScheme.value
-                              .primary, // Choose an appropriate color for the outline
+                          ..color = _colorController.colorScheme.value.primary,
                       ),
                     ),
-                    // Solid text as fill.
                     Text(
                       'Create Account',
                       style: TextStyle(
@@ -51,63 +50,85 @@ class SignupPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40.0),
-              Text('Your email address',
-                  style: TextStyle(
-                      color: _colorController.colorScheme.value.onSurface)),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+              Center(
+                child: GestureDetector(
+                  onTap: () => _showImagePickerOptions(context),
+                  child: Obx(() => CircleAvatar(
+                        radius: 50,
+                        backgroundImage: signupController
+                                .selectedImagePath.value.isNotEmpty
+                            ? FileImage(
+                                File(signupController.selectedImagePath.value))
+                            : null,
+                        child: signupController.selectedImagePath.value.isEmpty
+                            ? const Icon(Icons.add_a_photo, size: 50)
+                            : null,
+                      )),
                 ),
               ),
               const SizedBox(height: 20.0),
-              Text('Choose a password',
-                  style: TextStyle(
-                      color: _colorController.colorScheme.value.onSurface)),
               TextField(
-                controller: passwordController,
+                controller: signupController.emailController,
+                decoration: customInputDecoration(
+                  labelText: 'Your email address',
+                  borderColor: _colorController.colorScheme.value.onSecondary,
+                  focusedBorderColor:
+                      _colorController.colorScheme.value.secondary,
+                  focusedLabelColor:
+                      _colorController.colorScheme.value.onSecondary,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              TextField(
+                controller: signupController.passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Enter your password',
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
-                  suffixIcon: const Icon(Icons.visibility_off),
+                decoration: customInputDecoration(
+                  labelText: 'Choose a password',
+                  borderColor: _colorController.colorScheme.value.onSecondary,
+                  focusedBorderColor:
+                      _colorController.colorScheme.value.secondary,
+                  focusedLabelColor:
+                      _colorController.colorScheme.value.onSecondary,
                 ),
               ),
               const SizedBox(height: 20.0),
-              Text('Your name',
-                  style: TextStyle(
-                      color: _colorController.colorScheme.value.onSurface)),
               TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your name',
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)),
+                controller: signupController.nameController,
+                decoration: customInputDecoration(
+                  labelText: 'Your name',
+                  borderColor: _colorController.colorScheme.value.onSecondary,
+                  focusedBorderColor:
+                      _colorController.colorScheme.value.secondary,
+                  focusedLabelColor:
+                      _colorController.colorScheme.value.onSecondary,
                 ),
               ),
               const SizedBox(height: 30.0),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  String profileImagePath =
+                      signupController.selectedImagePath.value;
+
                   Map<String, dynamic> userDetails = {
-                    'email': emailController.text,
-                    'name': nameController.text,
+                    'email': signupController.emailController.text,
+                    'name': signupController.nameController.text,
                     'createdAt': DateTime.now(),
-                    // Add other fields if needed
+                    'profileImage':
+                        profileImagePath.isNotEmpty ? profileImagePath : "",
                   };
-                  authController.createUser(emailController.text,
-                      passwordController.text, userDetails);
+
+                  await authController
+                      .createUser(
+                    signupController.emailController.text,
+                    signupController.passwordController.text,
+                    userDetails,
+                  )
+                      .then((_) {
+                    if (authController.isLoggedIn()) {
+                      Get.offNamed(
+                          '/landing'); // Navigate to landing page after signup
+                    }
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _colorController.colorScheme.value.secondary,
@@ -120,36 +141,35 @@ class SignupPage extends StatelessWidget {
                 child: const Text('Sign Up'),
               ),
               const SizedBox(height: 20.0),
-              if (true) // Condition if you need an 'or' divider
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                          thickness: 2,
-                          color: _colorController.colorScheme.value.onSurface),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('or',
-                          style: TextStyle(
-                              color: _colorController
-                                  .colorScheme.value.onSurface)),
-                    ),
-                    Expanded(
-                      child: Divider(
-                          thickness: 2,
-                          color: _colorController.colorScheme.value.onSurface),
-                    ),
-                  ],
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                        thickness: 2,
+                        color: _colorController.colorScheme.value.onSurface),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text('or',
+                        style: TextStyle(
+                            color:
+                                _colorController.colorScheme.value.onSurface)),
+                  ),
+                  Expanded(
+                    child: Divider(
+                        thickness: 2,
+                        color: _colorController.colorScheme.value.onSurface),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already have an account ? "),
+                  const Text("Already have an account? "),
                   TextButton(
                       onPressed: () {
-                        Get.back(); // This will navigate back to the previous page
+                        Get.back();
                       },
                       child: Text(
                         'Login',
@@ -163,6 +183,35 @@ class SignupPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showImagePickerOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Gallery'),
+                  onTap: () {
+                    signupController.pickImage(ImageSource.gallery);
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  signupController.pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

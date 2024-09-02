@@ -3,12 +3,12 @@ import 'package:eco_saver/models/income.dart';
 import 'package:eco_saver/services/expenses_service.dart';
 import 'package:eco_saver/services/incomes_service.dart';
 import 'package:get/get.dart';
-import 'package:eco_saver/controllers/auth_controller.dart';
+import 'package:eco_saver/services/auth_service.dart';
 
 class TotalController extends GetxController {
   final ExpenseController expenseController = Get.find<ExpenseController>();
   final IncomeController incomeController = Get.find<IncomeController>();
-  final AuthController authController = Get.find<AuthController>();
+  final AuthService authController = Get.find<AuthService>();
 
   RxDouble currentMonthTotalExpense = 0.0.obs;
   RxDouble currentMonthTotalIncome = 0.0.obs;

@@ -1,63 +1,84 @@
-import 'package:eco_saver/controllers/budget_controller.dart';
+import 'package:eco_saver/auth_binding.dart';
 import 'package:eco_saver/controllers/buttons_controller.dart';
-import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/controllers/goal_controller.dart';
-import 'package:eco_saver/controllers/total_balance_controller.dart';
-import 'package:eco_saver/controllers/transaction_controller.dart';
-import 'package:eco_saver/services/budget_service.dart';
-import 'package:eco_saver/services/expenses_service.dart';
-import 'package:eco_saver/services/goal_service.dart';
-import 'package:eco_saver/services/incomes_service.dart';
+import 'package:eco_saver/services/auth_service.dart';
+import 'package:eco_saver/views/pages/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'controllers/auth_controller.dart'; // Ensure this is correctly imported
 import 'views/pages/auth_pages/login_page.dart';
 import 'views/pages/auth_pages/sign_up_page.dart';
 import 'views/landing_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  print("this is a test");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  final AuthController authController = Get.put(AuthController());
-
-  // Initialize GetX controllers
+  // Initialize global controllers
+  Get.put(AuthService());
   Get.put(ColorController());
   Get.put(ButtonsController());
 
-  Get.put(ExpenseController());
-  Get.put(IncomeController()); // Register the IncomeController
-  Get.put(TransactionsController()); // Ensure this is initialized
-  Get.put(CategoryController());
-  Get.put(TotalController());
-  Get.put(BudgetService());
-  Get.put(BudgetController());
-  Get.put(GoalService());
-  Get.put(GoalController());
-
-  runApp(MyApp(
-    initialRoute: authController.isLoggedIn() ? '/landing' : '/login',
-  ));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final String initialRoute;
-  const MyApp({super.key, required this.initialRoute});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialRoute: '/',
       debugShowCheckedModeBanner: false,
-      title: 'Eco Saver',
-      initialRoute: initialRoute,
       getPages: [
+        GetPage(name: '/', page: () => SplashScreen()),
+        GetPage(
+            name: '/landing',
+            page: () => LandingPage(),
+            binding: AuthBinding()),
         GetPage(name: '/login', page: () => LoginPage()),
         GetPage(name: '/signup', page: () => SignupPage()),
-        GetPage(name: '/landing', page: () => LandingPage()),
       ],
     );
   }
 }
+
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+//   final AuthService authService = Get.put(AuthService());
+
+//   // These controllers can be initialized immediately
+//   Get.put(ColorController());
+//   Get.put(ButtonsController());
+
+//   runApp(MyApp(
+//     initialRoute: authService.isLoggedIn() ? '/landing' : '/login',
+//   ));
+// }
+
+// class MyApp extends StatelessWidget {
+//   final String initialRoute;
+//   const MyApp({super.key, required this.initialRoute});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       initialRoute: initialRoute,
+//       debugShowCheckedModeBanner: false,
+//       getPages: [
+//         GetPage(
+//           name: '/landing',
+//           page: () => LandingPage(),
+//           binding: AuthBinding(),
+//         ),
+//         GetPage(name: '/login', page: () => LoginPage()),
+//         GetPage(name: '/signup', page: () => SignupPage()),
+//       ],
+//     );
+//   }
+// }

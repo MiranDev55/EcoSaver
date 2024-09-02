@@ -1,11 +1,11 @@
-import 'package:eco_saver/controllers/auth_controller.dart';
+import 'package:eco_saver/services/auth_service.dart';
 import 'package:eco_saver/models/income.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class IncomeController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final AuthController authController = Get.find<AuthController>();
+  final AuthService authController = Get.find<AuthService>();
 
   // Cache to store incomes by month and document ID
   RxMap<String, Map<String, List<Income>>> monthlyIncome =

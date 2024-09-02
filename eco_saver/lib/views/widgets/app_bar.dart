@@ -1,4 +1,5 @@
 import 'package:eco_saver/controllers/color_controller.dart';
+import 'package:eco_saver/views/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: _colorController.colorScheme.value.onSecondary,
         ),
       ),
-      actions: const [Icon(Icons.settings)],
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: IconButton(
+              onPressed: () {
+                Get.to(() => SettingsScreen());
+              },
+              icon: Icon(Icons.settings,
+                  color: _colorController.colorScheme.value.primary)),
+          // child: Icon(Icons.settings,
+          //     color: _colorController.colorScheme.value.primary),
+        )
+      ],
     );
   }
 

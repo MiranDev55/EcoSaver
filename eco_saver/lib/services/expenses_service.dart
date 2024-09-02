@@ -1,11 +1,11 @@
-import 'package:eco_saver/controllers/auth_controller.dart';
+import 'package:eco_saver/services/auth_service.dart';
 import 'package:eco_saver/models/expense.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ExpenseController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final AuthController authController = Get.find<AuthController>();
+  final AuthService authController = Get.find<AuthService>();
 
   // Cache to store expenses by month and document ID
   RxMap<String, Map<String, List<Expense>>> monthlyExpense =
@@ -17,9 +17,12 @@ class ExpenseController extends GetxController {
 
     // Watch for changes in the user ID and fetch expenses when it changes
     ever(authController.userId, (String userId) {
+      //print("userId for Expenses = $userId");
       if (userId.isNotEmpty) {
+        //print("userId for Expenses = $userId");
         getUserExpensesForCurrentMonth(userId);
       } else {
+        //print("userId for Expenses = $userId");
         // Clear the expenses if the user is not logged in
         monthlyExpense.clear();
       }

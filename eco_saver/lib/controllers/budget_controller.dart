@@ -2,12 +2,12 @@ import 'package:eco_saver/models/expense.dart';
 import 'package:eco_saver/services/expenses_service.dart';
 import 'package:get/get.dart';
 import 'package:eco_saver/services/budget_service.dart';
-import 'package:eco_saver/controllers/auth_controller.dart';
+import 'package:eco_saver/services/auth_service.dart';
 
 class BudgetController extends GetxController {
   final ExpenseController expenseController = Get.find<ExpenseController>();
   final BudgetService budgetService = Get.find<BudgetService>();
-  final AuthController authController = Get.find<AuthController>();
+  final AuthService authController = Get.find<AuthService>();
 
   // A map to hold the budget for each category (e.g., "Groceries" -> 200.0)
   RxMap<String, double> budgets = <String, double>{}.obs;
