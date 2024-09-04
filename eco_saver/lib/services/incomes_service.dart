@@ -11,20 +11,20 @@ class IncomeController extends GetxController {
   RxMap<String, Map<String, List<Income>>> monthlyIncome =
       RxMap<String, Map<String, List<Income>>>();
 
-  @override
-  void onInit() {
-    super.onInit();
+  // @override
+  // void onInit() {
+  //   super.onInit();
 
-    // Watch for changes in the user ID and fetch incomes when it changes
-    ever(authController.userId, (String userId) {
-      if (userId.isNotEmpty) {
-        getUserIncomesForCurrentMonth(userId);
-      } else {
-        // Clear the incomes if the user is not logged in
-        monthlyIncome.clear();
-      }
-    });
-  }
+  //   // Watch for changes in the user ID and fetch incomes when it changes
+  //   ever(authController.userId, (String userId) {
+  //     if (userId.isNotEmpty) {
+  //       getUserIncomesForCurrentMonth(userId);
+  //     } else {
+  //       // Clear the incomes if the user is not logged in
+  //       monthlyIncome.clear();
+  //     }
+  //   });
+  // }
 
   // Method to retrieve incomes for the current month
   Future<void> getUserIncomesForCurrentMonth(String userId) async {

@@ -17,9 +17,6 @@ class AuthService extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // User authentication status
-  Rxn<User> firebaseUser = Rxn<User>();
-
   // User ID
   RxString userId = ''.obs;
 
@@ -29,20 +26,11 @@ class AuthService extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Bind user changes
-    firebaseUser.bindStream(_auth.authStateChanges());
-
-    // Update user ID and fetch user data when authentication state changes
-    ever(firebaseUser, (User? user) async {
-      userId.value =
-          user?.uid ?? ''; // Update userId whenever firebaseUser changes
-
+    // Bind user ID changes when authentication state changes
+    _auth.authStateChanges().listen((User? user) async {
       if (user != null) {
+        userId.value = user.uid;
         await _fetchUserData(user.uid);
-      } else {
-        print("inside onInit of authService, user = ${user?.uid}");
-        //clearUserData(); // Clear user data on sign out
-        //disposeUserDependentControllers(); // Dispose user-dependent controllers
       }
     });
   }
@@ -68,7 +56,7 @@ class AuthService extends GetxController {
 
   // Method to check if the user is logged in
   bool isLoggedIn() {
-    return firebaseUser.value != null;
+    return userId.isNotEmpty;
   }
 
   // Sign Up Method
@@ -89,22 +77,12 @@ class AuthService extends GetxController {
     }
   }
 
-  // // Sign In Method
-  // Future<void> signIn(String email, String password) async {
-  //   try {
-  //     await _auth.signInWithEmailAndPassword(email: email, password: password);
-  //     Get.offNamed('/landing'); // Navigate to landing page after sign in
-  //   } catch (e) {
-  //     Get.snackbar('Login Error', e.toString());
-  //   }
-  // }
-
+  // Sign In Method
   Future<void> signIn(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      firebaseUser.value =
-          userCredential.user; // Explicitly update firebaseUser
+      userId.value = userCredential.user?.uid ?? ''; // Update userId
       Get.offNamed('/landing'); // Navigate to landing page after sign in
     } catch (e) {
       Get.snackbar('Login Error', e.toString());
@@ -114,13 +92,10 @@ class AuthService extends GetxController {
   // Sign Out Method
   Future<void> signOut() async {
     await _auth.signOut();
-    // disposeUserDependentControllers(); // Dispose user-dependent controllers
-    // clearUserData(); // Clear user data on sign out
-    // Get.offAllNamed('/login'); // Redirect to login page after sign out
   }
 
   // Method to dispose of user-dependent controllers
-  void disposeUserDependentControllers() {
+  Future<void> disposeUserDependentControllers() async {
     Get.delete<LandingPageController>(force: true);
     Get.delete<ExpenseController>(force: true);
     Get.delete<IncomeController>(force: true);

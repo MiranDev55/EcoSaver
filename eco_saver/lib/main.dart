@@ -12,7 +12,6 @@ import 'views/landing_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  print("this is a test");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -44,41 +43,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-//   final AuthService authService = Get.put(AuthService());
-
-//   // These controllers can be initialized immediately
-//   Get.put(ColorController());
-//   Get.put(ButtonsController());
-
-//   runApp(MyApp(
-//     initialRoute: authService.isLoggedIn() ? '/landing' : '/login',
-//   ));
-// }
-
-// class MyApp extends StatelessWidget {
-//   final String initialRoute;
-//   const MyApp({super.key, required this.initialRoute});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GetMaterialApp(
-//       initialRoute: initialRoute,
-//       debugShowCheckedModeBanner: false,
-//       getPages: [
-//         GetPage(
-//           name: '/landing',
-//           page: () => LandingPage(),
-//           binding: AuthBinding(),
-//         ),
-//         GetPage(name: '/login', page: () => LoginPage()),
-//         GetPage(name: '/signup', page: () => SignupPage()),
-//       ],
-//     );
-//   }
-// }

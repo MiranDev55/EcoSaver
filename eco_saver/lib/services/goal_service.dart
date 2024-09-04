@@ -45,8 +45,6 @@ class GoalService extends GetxService {
       };
 
       cachedGoals.refresh();
-
-      print("Goal created successfully");
     } catch (e) {
       // ignore: avoid_print
       print("Failed to create goal: $e");
@@ -84,6 +82,7 @@ class GoalService extends GetxService {
         return goalData;
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Failed to get goal: $e");
     }
 
@@ -125,9 +124,8 @@ class GoalService extends GetxService {
         cachedGoals[goalId]!['dateModified'] = DateTime.now();
         cachedGoals.refresh();
       }
-
-      print("Goal updated successfully");
     } catch (e) {
+      // ignore: avoid_print
       print("Failed to update goal: $e");
     }
   }
@@ -146,9 +144,8 @@ class GoalService extends GetxService {
       // Remove from local cache
       cachedGoals.remove(goalId);
       cachedGoals.refresh();
-
-      print("Goal deleted successfully");
     } catch (e) {
+      // ignore: avoid_print
       print("Failed to delete goal: $e");
     }
   }
@@ -190,6 +187,7 @@ class GoalService extends GetxService {
 
       return allGoals;
     } catch (e) {
+      // ignore: avoid_print
       print("Failed to get all goals: $e");
     }
 

@@ -6,7 +6,7 @@ import 'package:eco_saver/views/widgets/setting_sections.dart';
 
 class SettingsScreen extends StatelessWidget {
   final ColorController colorController = Get.find();
-  final AuthService authController = Get.find();
+  final AuthService authService = Get.find();
 
   SettingsScreen({super.key});
 
@@ -61,7 +61,13 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      authController.signOut(); // Log out the user
+                      authService.signOut().then((_) {
+                        // Navigate to login page after successful logout
+                        Get.offAllNamed('/login');
+                        authService.disposeUserDependentControllers().then((_) {
+                          authService.clearUserData();
+                        });
+                      }); // Log out the user
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:

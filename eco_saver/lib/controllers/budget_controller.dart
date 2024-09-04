@@ -30,16 +30,6 @@ class BudgetController extends GetxController {
     ever(budgetService.categoryBudgets, (_) {
       _calculateSpendingForCurrentMonth();
     });
-
-    // Listen to user ID changes to load the corresponding budgets
-    ever(authController.userId, (String userId) {
-      if (userId.isNotEmpty) {
-        _loadBudgets(userId);
-      } else {
-        budgets.clear();
-        spent.clear();
-      }
-    });
   }
 
   // Method to create a budget for a specific category

@@ -31,12 +31,13 @@ class TransactionPage extends StatelessWidget {
             child: Column(
               children: [
                 TransactionDateSelector(
-                  initialDate: DateTime.now(),
+                  initialDate: transactionsController.chosenDate,
                   onMonthChanged: (selectedDate) {
                     // Update both expenses and incomes for the selected month
                     transactionsController.filterExpensesByMonth(selectedDate);
                     transactionsController.filterIncomesByMonth(selectedDate);
                   },
+                  colorController: colorController,
                 ),
                 Expanded(
                   child: CustomContainer(

@@ -11,23 +11,23 @@ class ExpenseController extends GetxController {
   RxMap<String, Map<String, List<Expense>>> monthlyExpense =
       RxMap<String, Map<String, List<Expense>>>();
 
-  @override
-  void onInit() {
-    super.onInit();
+  // @override
+  // void onInit() {
+  //   super.onInit();
 
-    // Watch for changes in the user ID and fetch expenses when it changes
-    ever(authController.userId, (String userId) {
-      //print("userId for Expenses = $userId");
-      if (userId.isNotEmpty) {
-        //print("userId for Expenses = $userId");
-        getUserExpensesForCurrentMonth(userId);
-      } else {
-        //print("userId for Expenses = $userId");
-        // Clear the expenses if the user is not logged in
-        monthlyExpense.clear();
-      }
-    });
-  }
+  //   // Watch for changes in the user ID and fetch expenses when it changes
+  //   ever(authController.userId, (String userId) {
+  //     //print("userId for Expenses = $userId");
+  //     if (userId.isNotEmpty) {
+  //       //print("userId for Expenses = $userId");
+  //       getUserExpensesForCurrentMonth(userId);
+  //     } else {
+  //       //print("userId for Expenses = $userId");
+  //       // Clear the expenses if the user is not logged in
+  //       monthlyExpense.clear();
+  //     }
+  //   });
+  // }
 
   // Method to retrieve expenses for the current month
   Future<void> getUserExpensesForCurrentMonth(String userId) async {
