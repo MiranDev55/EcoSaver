@@ -2,10 +2,10 @@ import 'package:eco_saver/controllers/buttons_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/transaction_controller.dart';
 import 'package:eco_saver/utils/custom_button.dart';
+import 'package:eco_saver/utils/date_selector.dart';
 import 'package:eco_saver/views/pages/transcription_pages/add_transcription.dart';
 import 'package:eco_saver/views/widgets/app_bar.dart';
 import 'package:eco_saver/utils/custom_container.dart';
-import 'package:eco_saver/views/widgets/transactions_widgets/transaction_date_selector.dart';
 import 'package:eco_saver/views/widgets/transactions_widgets/transcription_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,14 +30,25 @@ class TransactionPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                TransactionDateSelector(
+                // TransactionDateSelector(
+                //   initialDate: transactionsController.chosenDate,
+                //   onMonthChanged: (selectedDate) {
+                //     // Update both expenses and incomes for the selected month
+                //     transactionsController.filterExpensesByMonth(selectedDate);
+                //     transactionsController.filterIncomesByMonth(selectedDate);
+                //   },
+                //   colorController: colorController,
+                // ),
+
+                // Use the new CustomDateSelector
+                CustomDateSelector(
                   initialDate: transactionsController.chosenDate,
-                  onMonthChanged: (selectedDate) {
+                  onDateSelected: (selectedDate) {
                     // Update both expenses and incomes for the selected month
                     transactionsController.filterExpensesByMonth(selectedDate);
                     transactionsController.filterIncomesByMonth(selectedDate);
                   },
-                  colorController: colorController,
+                  colorController: colorController, // Pass the color controller
                 ),
                 Expanded(
                   child: CustomContainer(

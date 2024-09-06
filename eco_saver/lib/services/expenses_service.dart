@@ -29,6 +29,13 @@ class ExpenseController extends GetxController {
   //   });
   // }
 
+  @override
+  void onInit() {
+    super.onInit();
+
+    getUserExpensesForCurrentMonth(authController.userId.value);
+  }
+
   // Method to retrieve expenses for the current month
   Future<void> getUserExpensesForCurrentMonth(String userId) async {
     DateTime now = DateTime.now();

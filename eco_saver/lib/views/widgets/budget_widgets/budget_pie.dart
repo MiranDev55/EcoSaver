@@ -5,7 +5,6 @@ import 'package:eco_saver/views/widgets/budget_widgets/pie_indicator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../controllers/color_controller.dart';
 
 class BudgetPie extends StatelessWidget {
@@ -16,10 +15,11 @@ class BudgetPie extends StatelessWidget {
   // List to hold random light colors for each category
   final List<Color> _randomColors = [];
 
-  BudgetPie(
-      {super.key,
-      required this.categoryController,
-      required this.colorController}) {
+  BudgetPie({
+    super.key,
+    required this.categoryController,
+    required this.colorController,
+  }) {
     // Generate random light colors for each category
     _generateRandomColors();
   }
@@ -27,8 +27,11 @@ class BudgetPie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final totalBudget =
-          budgetController.budgets.values.fold(0.0, (sum, item) => sum + item);
+      // Access the 'budget' field from each Budget object
+      final totalBudget = budgetController.budgets.values.fold(
+        0.0,
+        (sum, budgetObj) => sum + (budgetObj.budget),
+      );
 
       return AspectRatio(
         aspectRatio: 1.3,
@@ -61,8 +64,9 @@ class BudgetPie extends StatelessWidget {
                                 return;
                               }
                               budgetController.updatePieChartTouchedIndex(
-                                  pieTouchResponse
-                                      .touchedSection!.touchedSectionIndex);
+                                pieTouchResponse
+                                    .touchedSection!.touchedSectionIndex,
+                              );
                             },
                           ),
                           borderData: FlBorderData(show: false),
@@ -106,11 +110,14 @@ class BudgetPie extends StatelessWidget {
   }
 
   List<PieChartSectionData> showingSections() {
-    final totalBudget =
-        budgetController.budgets.values.fold(0.0, (sum, item) => sum + item);
+    // Access the 'budget' field from each Budget object
+    final totalBudget = budgetController.budgets.values.fold(
+      0.0,
+      (sum, budgetObj) => sum + (budgetObj.budget),
+    );
 
     return budgetController.budgets.keys.map((category) {
-      final categoryBudget = budgetController.budgets[category] ?? 0.0;
+      final categoryBudget = budgetController.budgets[category]?.budget ?? 0.0;
       final percentage =
           totalBudget == 0 ? 0.0 : (categoryBudget / totalBudget) * 100;
 

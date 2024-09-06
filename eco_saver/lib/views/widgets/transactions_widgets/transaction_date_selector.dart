@@ -69,7 +69,10 @@ class TransactionDateSelector extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Select Month and Year'),
+          title: Text(
+            'Select Month and Year',
+            style: TextStyle(color: colorController.colorScheme.value.primary),
+          ),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -77,11 +80,21 @@ class TransactionDateSelector extends StatelessWidget {
               Expanded(
                 child: DropdownButton<int>(
                   value: selectedYear,
+                  dropdownColor: colorController.colorScheme.value
+                      .surface, // Sets the dropdown background color
+                  style: TextStyle(
+                    color: colorController.colorScheme.value
+                        .primary, // Sets the color of the selected value text
+                  ),
                   items: List.generate(100, (index) {
                     int year = DateTime.now().year - 50 + index;
                     return DropdownMenuItem(
                       value: year,
-                      child: Text('$year'),
+                      child: Text(
+                        '$year',
+                        style: TextStyle(
+                            color: colorController.colorScheme.value.primary),
+                      ),
                     );
                   }),
                   onChanged: (newYear) {
@@ -93,11 +106,21 @@ class TransactionDateSelector extends StatelessWidget {
               Expanded(
                 child: DropdownButton<int>(
                   value: selectedMonth,
+                  dropdownColor: colorController.colorScheme.value
+                      .surface, // Sets the dropdown background color
+                  style: TextStyle(
+                    color: colorController.colorScheme.value
+                        .primary, // Sets the color of the selected value text
+                  ),
                   items: List.generate(12, (index) {
                     int month = index + 1;
                     return DropdownMenuItem(
                       value: month,
-                      child: Text(DateFormat.MMMM().format(DateTime(0, month))),
+                      child: Text(
+                        DateFormat.MMMM().format(DateTime(0, month)),
+                        style: TextStyle(
+                            color: colorController.colorScheme.value.primary),
+                      ),
                     );
                   }),
                   onChanged: (newMonth) {
@@ -109,13 +132,20 @@ class TransactionDateSelector extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.pink),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('OK'),
+              child: Text(
+                'OK',
+                style:
+                    TextStyle(color: colorController.colorScheme.value.primary),
+              ),
               onPressed: () {
                 selectedDate.value = DateTime(selectedYear, selectedMonth);
                 onMonthChanged(selectedDate.value);

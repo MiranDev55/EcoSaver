@@ -1,7 +1,7 @@
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/total_balance_controller.dart';
 import 'package:eco_saver/utils/custom_container.dart';
-import 'package:eco_saver/views/widgets/dashboard_widgets/month_dashboard_selector.dart';
+import 'package:eco_saver/utils/date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +29,18 @@ class ToTalBalanceCard extends StatelessWidget {
                   color: colorController.colorScheme.value.onSurface,
                 ),
               ),
-              MonthDashboardSelector(), // Updated to use the MonthYearSelector widget
+              CustomDateSelector(
+                initialDate: DateTime(_totalController.currentYear.value,
+                    _totalController.currentMonth.value),
+                colorController: colorController,
+                onDateSelected: (selectedDate) {
+                  // Update the TotalController with the selected month and year
+                  _totalController.currentYear.value = selectedDate.year;
+                  _totalController.currentMonth.value = selectedDate.month;
+                  _totalController.getTotalsForMonth(
+                      selectedDate.year, selectedDate.month);
+                },
+              ),
             ],
           ),
           const SizedBox(height: 8),

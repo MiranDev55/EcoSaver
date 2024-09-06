@@ -26,6 +26,13 @@ class IncomeController extends GetxController {
   //   });
   // }
 
+  @override
+  void onInit() {
+    super.onInit();
+
+    getUserIncomesForCurrentMonth(authController.userId.value);
+  }
+
   // Method to retrieve incomes for the current month
   Future<void> getUserIncomesForCurrentMonth(String userId) async {
     DateTime now = DateTime.now();

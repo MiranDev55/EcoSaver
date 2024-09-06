@@ -1,11 +1,9 @@
 import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/utils/custom_container.dart';
 import 'package:eco_saver/utils/input_decoration.dart';
 import 'package:eco_saver/views/widgets/app_bar.dart';
 import 'package:eco_saver/views/widgets/budget_widgets/budget_list.dart';
-import 'package:eco_saver/views/widgets/budget_widgets/budget_pie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,38 +28,48 @@ class BudgetPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                CustomContainer(
-                  child: BudgetPie(
-                    categoryController: categoryController,
-                    colorController: colorController,
-                  ),
+                // CustomContainer(
+                //   child: BudgetPie(
+                //     categoryController: categoryController,
+                //     colorController: colorController,
+                //   ),
+                // ),
+                Row(
+                  children: [
+                    TextButton(
+                        onPressed: () => _showAddBudgetDialog(context),
+                        child: Text(
+                          "Add new Budget",
+                          style: TextStyle(
+                              color: colorController.colorScheme.value.primary),
+                        )),
+                  ],
                 ),
-                CustomContainer(
-                  child: Column(
-                    children: [
-                      BudgetList(
-                        categoryController: categoryController,
-                        budgetController: budgetController,
-                        colorController: colorController,
-                      ),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    BudgetList(
+                      categoryController: categoryController,
+                      budgetController: budgetController,
+                      colorController: colorController,
+                    ),
+                  ],
                 ),
+                // CustomContainer(
+                //   child: Column(
+                //     children: [
+                //       BudgetList(
+                //         categoryController: categoryController,
+                //         budgetController: budgetController,
+                //         colorController: colorController,
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _showAddBudgetDialog(context);
-      //   },
-      //   backgroundColor: colorController.colorScheme.value.secondary,
-      //   child: Icon(
-      //     Icons.add,
-      //     color: colorController.colorScheme.value.onSecondary,
-      //   ),
-      // ),
     );
   }
 
@@ -71,7 +79,10 @@ class BudgetPage extends StatelessWidget {
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Add New Budget'),
+        title: Text(
+          'Add New Budget',
+          style: TextStyle(color: colorController.colorScheme.value.primary),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -83,6 +94,8 @@ class BudgetPage extends StatelessWidget {
                 focusedLabelColor:
                     colorController.colorScheme.value.onSecondary,
               ),
+              style:
+                  TextStyle(color: colorController.colorScheme.value.primary),
               items: categoryController.expenseCategories
                   .map((category) => DropdownMenuItem<String>(
                         value: category.name,
