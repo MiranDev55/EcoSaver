@@ -21,6 +21,7 @@ class GoalPage extends StatelessWidget {
       appBar: CustomAppBar1(
         title: "Goal Page",
       ),
+      backgroundColor: _colorController.colorScheme.value.surface,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(

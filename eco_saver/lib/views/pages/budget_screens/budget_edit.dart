@@ -132,6 +132,7 @@ class BudgetEditPage extends StatelessWidget {
   // Function to show a confirmation dialog before deleting the budget
   void _confirmDelete() => Get.dialog(
         AlertDialog(
+          backgroundColor: colorController.colorScheme.value.surface,
           title: Column(
             children: [
               Icon(Icons.delete_outline,
