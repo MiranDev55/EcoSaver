@@ -1,3 +1,4 @@
+import 'package:eco_saver/controllers/auth/password_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
@@ -9,6 +10,9 @@ class LoginPage extends StatelessWidget {
   final AuthService _authController = Get.find<AuthService>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // Initialize PasswordController
+  final LoginController _passwordController = Get.put(LoginController());
 
   LoginPage({super.key});
 
@@ -61,6 +65,7 @@ class LoginPage extends StatelessWidget {
                       fontWeight: FontWeight.bold)),
               TextField(
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
                   hintStyle: const TextStyle(fontWeight: FontWeight.normal),
@@ -89,33 +94,45 @@ class LoginPage extends StatelessWidget {
                   style: TextStyle(
                       color: _colorController.colorScheme.value.onSurface,
                       fontWeight: FontWeight.bold)),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Enter your password',
-                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 20.0),
-                  suffixIcon: const Icon(Icons.visibility_off),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                        color: _colorController.colorScheme.value.onSecondary),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                        color: _colorController.colorScheme.value.onSecondary),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide(
-                        color: _colorController.colorScheme.value.secondary,
-                        width: 2.0),
-                  ),
-                ),
-              ),
+              Obx(() => TextField(
+                    controller: passwordController,
+                    obscureText: !_passwordController.isPasswordVisible
+                        .value, // Bind visibility to the controller
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your password',
+                      hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 20.0),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _passwordController.isPasswordVisible.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: _passwordController
+                            .togglePasswordVisibility, // Toggle visibility on press
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(
+                            color:
+                                _colorController.colorScheme.value.onSecondary),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(
+                            color:
+                                _colorController.colorScheme.value.onSecondary),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(
+                            color: _colorController.colorScheme.value.secondary,
+                            width: 2.0),
+                      ),
+                    ),
+                  )),
               const SizedBox(height: 30.0),
               CustomButton(
                 onPressed: () async {
@@ -124,7 +141,7 @@ class LoginPage extends StatelessWidget {
                     emailController.text,
                     passwordController.text,
                   )
-                      .then((result) {
+                      .then((_) {
                     if (_authController.isLoggedIn()) {
                       Get.offNamed('/landing'); // Navigate to the landing page
                     }

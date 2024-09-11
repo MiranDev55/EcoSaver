@@ -1,11 +1,10 @@
-import 'package:eco_saver/controllers/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
 
 class SplashScreen extends StatelessWidget {
   // ignore: unused_field
-  final SplashController _splashController = Get.put(SplashController());
+  //final SplashController _splashController = Get.put(SplashController());
   final ColorController _colorController = Get.find<ColorController>();
 
   SplashScreen({super.key});

@@ -4,9 +4,9 @@ import 'package:eco_saver/controllers/transaction_controller.dart';
 import 'package:eco_saver/utils/custom_button.dart';
 import 'package:eco_saver/utils/date_selector.dart';
 import 'package:eco_saver/views/pages/transcription_pages/add_transcription.dart';
-import 'package:eco_saver/views/widgets/app_bar.dart';
+import 'package:eco_saver/views/widgets/appbar1.dart';
 import 'package:eco_saver/utils/custom_container.dart';
-import 'package:eco_saver/views/widgets/transactions_widgets/transcription_list.dart';
+import 'package:eco_saver/views/pages/transcription_pages/transactions_widgets/transcription_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +22,7 @@ class TransactionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Transcriptions"),
+      appBar: CustomAppBar1(title: "Transcriptions"),
       backgroundColor: colorController.colorScheme.value.surface,
       body: Stack(
         children: [

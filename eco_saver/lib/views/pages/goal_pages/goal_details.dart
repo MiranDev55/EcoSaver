@@ -2,7 +2,8 @@ import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/goal_controller.dart';
 import 'package:eco_saver/models/goals.dart';
 import 'package:eco_saver/views/pages/goal_pages/edit_goal_page.dart';
-import 'package:eco_saver/views/widgets/goal_widgets.dart/goal_calculator.dart';
+import 'package:eco_saver/views/pages/goal_pages/goal_widgets.dart/goal_calculator.dart';
+import 'package:eco_saver/views/widgets/appbar2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,12 +17,8 @@ class GoalDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Goal detail',
-          style:
-              TextStyle(color: colorController.colorScheme.value.onSecondary),
-        ),
+      appBar: CustomAppBar2(
+        title: "Goal Details",
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -240,14 +237,17 @@ class GoalDetails extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          Get.dialog(CalculatorPopup(onAmountEntered: (enteredAmount) {
-            double newAmountSaved = goal.amountSaved + enteredAmount;
+          Get.dialog(CalculatorPopup(
+            onAmountEntered: (enteredAmount) {
+              double newAmountSaved = goal.amountSaved + enteredAmount;
 
-            goalController.updateGoal(
-              goalId: goal.id,
-              amountSaved: newAmountSaved,
-            );
-          }));
+              goalController.updateGoal(
+                goalId: goal.id,
+                amountSaved: newAmountSaved,
+              );
+            },
+            colorController: colorController,
+          ));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: colorController.colorScheme.value.secondary,

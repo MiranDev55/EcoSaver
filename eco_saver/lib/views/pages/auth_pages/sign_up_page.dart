@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/controllers/signup_controller.dart';
+import 'package:eco_saver/controllers/auth/signup_controller.dart';
 import 'package:eco_saver/services/auth_service.dart';
 import 'package:eco_saver/utils/input_decoration.dart';
 import 'package:flutter/material.dart';
@@ -55,13 +55,18 @@ class SignupPage extends StatelessWidget {
                   onTap: () => _showImagePickerOptions(context),
                   child: Obx(() => CircleAvatar(
                         radius: 50,
+                        backgroundColor:
+                            _colorController.colorScheme.value.secondary,
                         backgroundImage: signupController
                                 .selectedImagePath.value.isNotEmpty
                             ? FileImage(
                                 File(signupController.selectedImagePath.value))
                             : null,
                         child: signupController.selectedImagePath.value.isEmpty
-                            ? const Icon(Icons.add_a_photo, size: 50)
+                            ? Icon(Icons.add_a_photo,
+                                size: 50,
+                                color: _colorController
+                                    .colorScheme.value.onSecondary)
                             : null,
                       )),
                 ),
@@ -80,10 +85,9 @@ class SignupPage extends StatelessWidget {
               ),
               const SizedBox(height: 20.0),
               TextField(
-                controller: signupController.passwordController,
-                obscureText: true,
+                controller: signupController.nameController,
                 decoration: customInputDecoration(
-                  labelText: 'Choose a password',
+                  labelText: 'Your name',
                   borderColor: _colorController.colorScheme.value.onSecondary,
                   focusedBorderColor:
                       _colorController.colorScheme.value.secondary,
@@ -93,9 +97,10 @@ class SignupPage extends StatelessWidget {
               ),
               const SizedBox(height: 20.0),
               TextField(
-                controller: signupController.nameController,
+                controller: signupController.passwordController,
+                obscureText: true,
                 decoration: customInputDecoration(
-                  labelText: 'Your name',
+                  labelText: 'Choose a password',
                   borderColor: _colorController.colorScheme.value.onSecondary,
                   focusedBorderColor:
                       _colorController.colorScheme.value.secondary,

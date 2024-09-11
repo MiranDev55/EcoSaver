@@ -1,6 +1,7 @@
 import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/utils/input_decoration.dart';
+import 'package:eco_saver/views/pages/budget_screens/budget_widgets/budget_pie_chart.dart';
+import 'package:eco_saver/views/widgets/appbar2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,70 +28,84 @@ class BudgetEditPage extends StatelessWidget {
         budget.toString(); // Initialize with current budget
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Budget for $categoryName",
-          style: TextStyle(color: colorController.colorScheme.value.primary),
-        ),
-        backgroundColor: colorController.colorScheme.value.surface,
+      appBar: CustomAppBar2(
+        title: "Budget for $categoryName",
         actions: [
           IconButton(
-            padding: const EdgeInsets.only(right: 8),
-            icon: Icon(Icons.delete,
-                color: colorController.colorScheme.value.primary),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               _confirmDelete(); // Call delete confirmation dialog
             },
           ),
         ],
       ),
-      body: Container(
-        color: colorController.colorScheme.value.surface,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Current Budget: \$${budget.toStringAsFixed(2)}",
-                style: TextStyle(
+      body: SingleChildScrollView(
+        child: Container(
+          color: colorController.colorScheme.value.surface,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Current Budget: \$${budget.toStringAsFixed(2)}",
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
-                    color: colorController.colorScheme.value.onSecondary),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Spent: \$${spent.toStringAsFixed(2)}",
-                style: TextStyle(
+                    color: colorController.colorScheme.value.onSecondary,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Spent: \$${spent.toStringAsFixed(2)}",
+                  style: TextStyle(
                     fontSize: 16,
-                    color: colorController.colorScheme.value.onSecondary),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: budgetTextController,
-                keyboardType: TextInputType.number,
-                decoration: customInputDecoration(
-                  labelText: "New Budget Amount",
-                  borderColor: colorController.colorScheme.value.onSecondary,
-                  focusedBorderColor:
-                      colorController.colorScheme.value.secondary,
-                  focusedLabelColor:
-                      colorController.colorScheme.value.onSecondary,
+                    color: colorController.colorScheme.value.onSecondary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _updateBudget(); // Call update function when the button is pressed
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorController.colorScheme.value.primary,
-                  foregroundColor: colorController.colorScheme.value.onPrimary,
-                  minimumSize: const Size(double.infinity, 50),
+                const SizedBox(height: 20),
+                BudgetPieChart(
+                  spent: spent,
+                  budget: budget,
+                  colorController: colorController,
+                ), // Use the new pie chart here
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: budgetTextController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: "New Budget Amount",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: colorController.colorScheme.value.onSecondary,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: colorController.colorScheme.value.secondary,
+                      ),
+                    ),
+                    labelStyle: TextStyle(
+                      color: colorController.colorScheme.value.onSecondary,
+                    ),
+                  ),
                 ),
-                child: const Text("Update Budget"),
-              ),
-            ],
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _updateBudget(); // Call update function when the button is pressed
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        colorController.colorScheme.value.secondary,
+                    foregroundColor:
+                        colorController.colorScheme.value.onSecondary,
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: const Text("Update Budget"),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -114,7 +129,7 @@ class BudgetEditPage extends StatelessWidget {
     }
   }
 
-  // Function to show a confirmation dialog before deleting the budget with custom style
+  // Function to show a confirmation dialog before deleting the budget
   void _confirmDelete() => Get.dialog(
         AlertDialog(
           title: Column(
@@ -168,8 +183,7 @@ class BudgetEditPage extends StatelessWidget {
 
   // Function to delete the budget
   void _deleteBudget() {
-    budgetController.deleteBudget(
-        categoryName); // Delete the budget using the budgetController
+    budgetController.deleteBudget(categoryName);
     Get.snackbar(
       'Deleted',
       'The budget for $categoryName has been deleted',

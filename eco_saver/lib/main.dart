@@ -1,7 +1,8 @@
-import 'package:eco_saver/auth_binding.dart';
+import 'package:eco_saver/utils/auth_binding.dart';
 import 'package:eco_saver/controllers/buttons_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/services/auth_service.dart';
+import 'package:eco_saver/utils/splash_screen_binding.dart';
 import 'package:eco_saver/views/pages/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
       getPages: [
-        GetPage(name: '/', page: () => SplashScreen()),
+        GetPage(
+            name: '/',
+            page: () => SplashScreen(),
+            binding: SplashScreenBinding()),
         GetPage(
             name: '/landing',
             page: () => LandingPage(),

@@ -1,5 +1,7 @@
 import 'package:eco_saver/services/auth_service.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
+import 'package:eco_saver/views/pages/account_screen.dart';
+import 'package:eco_saver/views/widgets/appbar2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:eco_saver/views/widgets/setting_sections.dart';
@@ -9,6 +11,73 @@ class SettingsScreen extends StatelessWidget {
   final AuthService authService = Get.find();
 
   SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: colorController.colorScheme.value.surface,
+      appBar: CustomAppBar2(title: "Settings"),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: colorController.colorScheme.value.onPrimary,
+              child: Column(
+                children: [
+                  const SectionTitle(title: 'GENERAL'),
+                  MenuItem(
+                    icon: Icons.person,
+                    title: 'Account',
+                    onTap: () {
+                      Get.to(() => AccountScreen());
+                    },
+                  ),
+                  MenuItem(
+                    icon: Icons.notifications,
+                    title: 'Notifications',
+                    onTap: () {},
+                  ),
+                  MenuItem(
+                    icon: Icons.logout,
+                    title: 'Logout',
+                    onTap: () {
+                      _showLogoutDialog(context);
+                    },
+                  ),
+                  MenuItem(
+                    icon: Icons.delete,
+                    title: 'Delete account',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              color: colorController.colorScheme.value.onPrimary,
+              child: Column(
+                children: [
+                  const SectionTitle(title: 'FEEDBACK'),
+                  MenuItem(
+                    icon: Icons.bug_report,
+                    title: 'Report a bug',
+                    onTap: () {},
+                  ),
+                  MenuItem(
+                    icon: Icons.feedback,
+                    title: 'Send feedback',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(
@@ -64,9 +133,9 @@ class SettingsScreen extends StatelessWidget {
                       authService.signOut().then((_) {
                         // Navigate to login page after successful logout
                         Get.offAllNamed('/login');
-                        authService.disposeUserDependentControllers().then((_) {
-                          authService.clearUserData();
-                        });
+                        // authService.disposeUserDependentControllers().then((_) {
+                        //   authService.clearUserData();
+                        // });
                       }); // Log out the user
                     },
                     style: ElevatedButton.styleFrom(
@@ -87,77 +156,6 @@ class SettingsScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colorController.colorScheme.value.surface,
-      appBar: AppBar(
-        backgroundColor: colorController.colorScheme.value.surface,
-        title: Text(
-          'Settings',
-          style: TextStyle(color: colorController.colorScheme.value.primary),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: colorController.colorScheme.value.onPrimary,
-              child: Column(
-                children: [
-                  const SectionTitle(title: 'GENERAL'),
-                  MenuItem(
-                    icon: Icons.person,
-                    title: 'Account',
-                    onTap: () {},
-                  ),
-                  MenuItem(
-                    icon: Icons.notifications,
-                    title: 'Notifications',
-                    onTap: () {},
-                  ),
-                  MenuItem(
-                    icon: Icons.logout,
-                    title: 'Logout',
-                    onTap: () {
-                      _showLogoutDialog(context);
-                    },
-                  ),
-                  MenuItem(
-                    icon: Icons.delete,
-                    title: 'Delete account',
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              color: colorController.colorScheme.value.onPrimary,
-              child: Column(
-                children: [
-                  const SectionTitle(title: 'FEEDBACK'),
-                  MenuItem(
-                    icon: Icons.bug_report,
-                    title: 'Report a bug',
-                    onTap: () {},
-                  ),
-                  MenuItem(
-                    icon: Icons.feedback,
-                    title: 'Send feedback',
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }

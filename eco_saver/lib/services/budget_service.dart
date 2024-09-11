@@ -40,6 +40,7 @@ class BudgetService extends GetxService {
       categoryBudgets[category] = budget;
       categoryBudgets.refresh();
     } catch (e) {
+      // ignore: avoid_print
       print('Error creating budget: $e');
     }
   }
@@ -66,6 +67,7 @@ class BudgetService extends GetxService {
         budgets[category] = budget.budget;
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error retrieving all budgets: $e');
     }
 
@@ -101,6 +103,7 @@ class BudgetService extends GetxService {
         categoryBudgets.refresh();
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error updating budget: $e');
     }
   }
@@ -119,6 +122,7 @@ class BudgetService extends GetxService {
       // Remove from local cache
       categoryBudgets.remove(category);
     } catch (e) {
+      // ignore: avoid_print
       print('Error deleting budget: $e');
     }
   }
@@ -148,6 +152,7 @@ class BudgetService extends GetxService {
         return budget; // Return the Budget object
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error retrieving budget: $e');
     }
 

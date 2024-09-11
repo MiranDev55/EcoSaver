@@ -6,6 +6,7 @@ import 'package:eco_saver/services/expenses_service.dart';
 import 'package:eco_saver/controllers/category_controller.dart'; // Make sure this is correctly imported
 import 'package:eco_saver/services/incomes_service.dart';
 import 'package:eco_saver/utils/input_decoration.dart';
+import 'package:eco_saver/views/widgets/appbar2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,7 @@ class AddExpensePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title),
+      appBar: CustomAppBar2(title: title),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -190,20 +191,6 @@ class AddExpensePage extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  AppBar appBar(String title) {
-    return AppBar(
-      backgroundColor: _colorController.colorScheme.value.surface,
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: _colorController.colorScheme.value.onSecondary,
         ),
       ),
     );

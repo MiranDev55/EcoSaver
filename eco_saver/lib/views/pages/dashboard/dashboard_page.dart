@@ -1,7 +1,7 @@
 import 'package:eco_saver/controllers/color_controller.dart';
-import 'package:eco_saver/views/widgets/app_bar.dart';
-import 'package:eco_saver/views/widgets/dashboard_widgets/next_goal_card.dart';
-import 'package:eco_saver/views/widgets/dashboard_widgets/total_balance_card.dart';
+import 'package:eco_saver/views/widgets/appbar1.dart';
+import 'package:eco_saver/views/pages/dashboard/dashboard_widgets/next_goal_card.dart';
+import 'package:eco_saver/views/pages/dashboard/dashboard_widgets/total_balance_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +13,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: CustomAppBar1(
         title: "Dashboard",
       ),
       backgroundColor: colorController.colorScheme.value.surface,

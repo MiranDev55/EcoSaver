@@ -1,7 +1,7 @@
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/goal_controller.dart';
 import 'package:eco_saver/utils/input_decoration.dart';
-import 'package:eco_saver/views/widgets/app_bar.dart';
+import 'package:eco_saver/views/widgets/appbar2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +22,7 @@ class AddGoalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Add Goal"),
+      appBar: CustomAppBar2(title: "Add Goal"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(

@@ -1,7 +1,7 @@
 import 'package:eco_saver/utils/custom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/color_controller.dart';
+import '../../../../controllers/color_controller.dart';
 
 class NextGoalCard extends StatelessWidget {
   NextGoalCard({super.key});

@@ -1,6 +1,7 @@
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/goal_controller.dart';
 import 'package:eco_saver/utils/input_decoration.dart'; // Import your custom input decoration function
+import 'package:eco_saver/views/widgets/appbar2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,14 +29,7 @@ class EditGoalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Edit Goal',
-          style: TextStyle(
-              color: colorController.colorScheme.value.onSecondary,
-              fontWeight: FontWeight.bold),
-        ),
-      ),
+      appBar: CustomAppBar2(title: "Edit Goal"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

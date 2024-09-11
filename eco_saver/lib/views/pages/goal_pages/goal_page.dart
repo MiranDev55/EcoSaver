@@ -2,9 +2,9 @@
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/controllers/goal_controller.dart';
 import 'package:eco_saver/views/pages/goal_pages/add_goal_page.dart';
-import 'package:eco_saver/views/widgets/app_bar.dart';
+import 'package:eco_saver/views/widgets/appbar1.dart';
 import 'package:eco_saver/utils/custom_container.dart';
-import 'package:eco_saver/views/widgets/goal_widgets.dart/goal_tile.dart';
+import 'package:eco_saver/views/pages/goal_pages/goal_widgets.dart/goal_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +18,7 @@ class GoalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: CustomAppBar1(
         title: "Goal Page",
       ),
       body: Padding(

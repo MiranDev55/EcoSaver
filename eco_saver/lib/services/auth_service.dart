@@ -1,3 +1,4 @@
+import 'package:eco_saver/controllers/auth/signup_controller.dart';
 import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/goal_controller.dart';
@@ -59,18 +60,28 @@ class AuthService extends GetxController {
     return userId.isNotEmpty;
   }
 
-  // Sign Up Method
   Future<void> createUser(
       String email, String password, Map<String, dynamic> userDetails) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
+
       if (user != null) {
+        // Upload the image to Firebase Storage
+        String? imageUrl =
+            await Get.find<SignupController>().uploadImageToFirebase(user.uid);
+
+        // Add the imageUrl to userDetails if the image was uploaded
+        if (imageUrl != null) {
+          userDetails['profileImage'] = imageUrl;
+        }
+
+        // Save the user details in Firestore
         await _firestore.collection('users').doc(user.uid).set(userDetails);
-        clearUserData(); // Ensure any pre-existing user data is cleared
-        disposeUserDependentControllers(); // Dispose controllers before navigating
-        Get.offAllNamed('/login'); // Navigate to login page after sign up
+
+        userId.value = user.uid;
+        _fetchUserData(user.uid);
       }
     } catch (e) {
       Get.snackbar('Signup Error', e.toString());
@@ -90,8 +101,36 @@ class AuthService extends GetxController {
   }
 
   // Sign Out Method
+  // Future<void> signOut() async {
+  //   await _auth.signOut();
+  // }
+
+  // Sign Out Method
   Future<void> signOut() async {
+    clearUserData();
     await _auth.signOut();
+  }
+
+  // AuthService
+  Future<bool> checkUserTokenValidity() async {
+    try {
+      // Get the current user
+      User? user = _auth.currentUser;
+
+      // If the user is null, return false (user is not signed in)
+      if (user == null) {
+        return false;
+      }
+
+      // Try to refresh the token
+      await user.getIdToken(true);
+
+      // If the token is refreshed successfully, the user still exists
+      return true;
+    } catch (e) {
+      // If any error occurs (like the user being deleted), return false
+      return false;
+    }
   }
 
   // Method to dispose of user-dependent controllers

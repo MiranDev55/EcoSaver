@@ -2,8 +2,8 @@ import 'package:eco_saver/controllers/budget_controller.dart';
 import 'package:eco_saver/controllers/category_controller.dart';
 import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/utils/input_decoration.dart';
-import 'package:eco_saver/views/widgets/app_bar.dart';
-import 'package:eco_saver/views/widgets/budget_widgets/budget_list.dart';
+import 'package:eco_saver/views/widgets/appbar1.dart';
+import 'package:eco_saver/views/pages/budget_screens/budget_widgets/budget_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +17,7 @@ class BudgetPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: CustomAppBar1(
         title: "Budget",
       ),
       backgroundColor: colorController.colorScheme.value.surface,
@@ -28,21 +28,19 @@ class BudgetPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // CustomContainer(
-                //   child: BudgetPie(
-                //     categoryController: categoryController,
-                //     colorController: colorController,
-                //   ),
-                // ),
                 Row(
                   children: [
-                    TextButton(
-                        onPressed: () => _showAddBudgetDialog(context),
-                        child: Text(
-                          "Add new Budget",
-                          style: TextStyle(
-                              color: colorController.colorScheme.value.primary),
-                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: TextButton(
+                          onPressed: () => _showAddBudgetDialog(context),
+                          child: Text(
+                            "Add new Budget",
+                            style: TextStyle(
+                                color:
+                                    colorController.colorScheme.value.primary),
+                          )),
+                    ),
                   ],
                 ),
                 Column(
@@ -54,17 +52,6 @@ class BudgetPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                // CustomContainer(
-                //   child: Column(
-                //     children: [
-                //       BudgetList(
-                //         categoryController: categoryController,
-                //         budgetController: budgetController,
-                //         colorController: colorController,
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),

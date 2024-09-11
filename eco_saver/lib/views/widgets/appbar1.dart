@@ -3,8 +3,8 @@ import 'package:eco_saver/views/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar({super.key, required this.title});
+class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
+  CustomAppBar1({super.key, required this.title});
   final ColorController _colorController = Get.find<ColorController>();
   final String title;
 
@@ -29,8 +29,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               icon: Icon(Icons.settings,
                   color: _colorController.colorScheme.value.primary)),
-          // child: Icon(Icons.settings,
-          //     color: _colorController.colorScheme.value.primary),
         )
       ],
     );
