@@ -57,7 +57,7 @@ class AccountScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        _authService.userModel.value?.name ??
+                        _authService.userModel.value?.username ??
                             'Name not available',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

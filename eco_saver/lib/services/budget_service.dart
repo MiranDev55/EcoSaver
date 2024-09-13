@@ -14,7 +14,7 @@ class BudgetService extends GetxService {
   void onInit() {
     super.onInit();
     print("in the onInit of Budget Service");
-    getAllBudgets(_authService.userId.value);
+    getAllBudgets(_authService.userId!);
   }
 
   // Method to create a budget for a specific category

@@ -8,7 +8,7 @@ import 'package:eco_saver/services/auth_service.dart';
 class TotalController extends GetxController {
   final ExpenseController expenseController = Get.find<ExpenseController>();
   final IncomeController incomeController = Get.find<IncomeController>();
-  final AuthService authController = Get.find<AuthService>();
+  final AuthService authService = Get.find<AuthService>();
 
   RxDouble currentMonthTotalExpense = 0.0.obs;
   RxDouble currentMonthTotalIncome = 0.0.obs;
@@ -38,7 +38,7 @@ class TotalController extends GetxController {
 
     // Listen for changes in the viewed month and year
     everAll([currentYear, currentMonth], (_) {
-      String userId = authController.userId.value;
+      String userId = authService.userId!;
       if (userId.isNotEmpty) {
         calculateTotalsForMonth(currentYear.value, currentMonth.value);
       }
@@ -61,7 +61,7 @@ class TotalController extends GetxController {
     } else {
       // If not cached, trigger the fetch and exit the method early
       await expenseController.getUserExpensesForMonth(
-          authController.userId.value, year, month);
+          authService.userId!, year, month);
       return;
     }
 
@@ -73,7 +73,7 @@ class TotalController extends GetxController {
     } else {
       // If not cached, trigger the fetch and exit the method early
       await incomeController.getUserIncomesForMonth(
-          authController.userId.value, year, month);
+          authService.userId!, year, month);
       return;
     }
 

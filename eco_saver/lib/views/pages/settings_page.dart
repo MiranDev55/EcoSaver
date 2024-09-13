@@ -131,13 +131,14 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      authService.signOut().then((_) {
-                        // Navigate to login page after successful logout
-                        Get.offAllNamed('/login');
-                        // authService.disposeUserDependentControllers().then((_) {
-                        //   authService.clearUserData();
-                        // });
-                      }); // Log out the user
+                      authService.logout();
+                      // authService.logout().then((_) {
+                      //   // Navigate to login page after successful logout
+                      //   Get.offAllNamed('/login');
+                      //   // authService.disposeUserDependentControllers().then((_) {
+                      //   //   authService.clearUserData();
+                      //   // });
+                      // }); // Log out the user
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:

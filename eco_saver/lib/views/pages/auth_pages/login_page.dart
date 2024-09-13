@@ -136,16 +136,20 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 30.0),
               CustomButton(
                 onPressed: () async {
-                  await _authController
-                      .signIn(
+                  // await _authController
+                  //     .loginUser(
+                  //   emailController.text,
+                  //   passwordController.text,
+                  // )
+                  //     .then((_) {
+                  //   if (_authController.isLoggedIn()) {
+                  //     Get.offNamed('/landing'); // Navigate to the landing page
+                  //   }
+                  // });
+                  await _authController.loginUser(
                     emailController.text,
                     passwordController.text,
-                  )
-                      .then((_) {
-                    if (_authController.isLoggedIn()) {
-                      Get.offNamed('/landing'); // Navigate to the landing page
-                    }
-                  });
+                  );
                 },
                 text: 'Continue',
                 buttonStyle: CustomButtonStyle.fullWidthStyle(

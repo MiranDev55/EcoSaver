@@ -112,29 +112,10 @@ class SignupPage extends StatelessWidget {
               const SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () async {
-                  String profileImagePath =
-                      signupController.selectedImagePath.value;
-
-                  Map<String, dynamic> userDetails = {
-                    'email': signupController.emailController.text,
-                    'name': signupController.nameController.text,
-                    'createdAt': DateTime.now(),
-                    'profileImage':
-                        profileImagePath.isNotEmpty ? profileImagePath : "",
-                  };
-
-                  await authController
-                      .createUser(
-                    signupController.emailController.text,
-                    signupController.passwordController.text,
-                    userDetails,
-                  )
-                      .then((_) {
-                    if (authController.isLoggedIn()) {
-                      Get.offNamed(
-                          '/landing'); // Navigate to landing page after signup
-                    }
-                  });
+                  await authController.createUser(
+                      signupController.emailController.text,
+                      signupController.passwordController.text,
+                      signupController.nameController.text);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _colorController.colorScheme.value.secondary,

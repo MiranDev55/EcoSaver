@@ -1,35 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  final String uid;
-  final String email;
-  final String name;
-  final String profileImageUrl;
+  String uid;
+  String email;
+  String username;
+  String profilePic;
+  DateTime? createdAt;
 
   UserModel({
     required this.uid,
     required this.email,
-    required this.name,
-    required this.profileImageUrl,
+    required this.username,
+    this.profilePic = '',
+    this.createdAt,
   });
 
-  // Factory constructor to create a UserModel from a Firestore document snapshot
-  factory UserModel.fromjson(DocumentSnapshot doc) {
+  // Factory method to create a UserModel from Firestore data
+  factory UserModel.fromDocumentSnapshot(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return UserModel(
       uid: doc.id,
-      email: doc['email'],
-      name: doc['name'],
-      profileImageUrl: doc['profileImage'] ?? '',
+      email: data['email'] ?? '',
+      username: data['username'] ?? '',
+      profilePic: data['profilePic'] ?? '',
+      createdAt: (data['createdAt'] as Timestamp?)
+          ?.toDate(), // Convert Firestore Timestamp to DateTime
     );
   }
 
-  // Convert UserModel to a Map
-  Map<String, dynamic> toJson() {
+  // Method to convert UserModel to a Firestore-compatible map
+  Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
       'email': email,
-      'name': name,
-      'profileImage': profileImageUrl,
+      'username': username,
+      'profilePic': profilePic,
+      'createdAt':
+          FieldValue.serverTimestamp(), // Use server timestamp for createdAt
     };
   }
 }

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class IncomeController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final AuthService authController = Get.find<AuthService>();
+  final AuthService authService = Get.find<AuthService>();
 
   // Cache to store incomes by month and document ID
   RxMap<String, Map<String, List<Income>>> monthlyIncome =
@@ -30,7 +30,7 @@ class IncomeController extends GetxController {
   void onInit() {
     super.onInit();
 
-    getUserIncomesForCurrentMonth(authController.userId.value);
+    getUserIncomesForCurrentMonth(authService.userId!);
   }
 
   // Method to retrieve incomes for the current month

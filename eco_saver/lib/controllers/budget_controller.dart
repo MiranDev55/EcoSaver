@@ -9,7 +9,7 @@ import 'package:eco_saver/services/auth_service.dart';
 class BudgetController extends GetxController {
   final ExpenseController expenseController = Get.find<ExpenseController>();
   final BudgetService budgetService = Get.find<BudgetService>();
-  final AuthService _authController = Get.find<AuthService>();
+  final AuthService _authService = Get.find<AuthService>();
 
   // A map to hold the Budget objects for each category (e.g., "Groceries" -> Budget instance)
   RxMap<String, Budget> budgets = <String, Budget>{}.obs;
@@ -28,7 +28,7 @@ class BudgetController extends GetxController {
     ever(expenseController.monthlyExpense, (_) {
       _calculateSpendingForCurrentMonth();
     });
-    _loadBudgets(_authController.userId.value);
+    _loadBudgets(_authService.userId!);
     ever(budgetService.categoryBudgets, (_) {
       _calculateSpendingForCurrentMonth();
       print("warning, this listener is going endless");
@@ -39,7 +39,7 @@ class BudgetController extends GetxController {
   // Method to create a budget for a specific category
   // Method to create a budget for a specific category
   Future<void> createBudget(String category, double amount) async {
-    String userId = _authController.userId.value;
+    String userId = _authService.userId!;
 
     if (!budgets.containsKey(category)) {
       await budgetService.createBudget(userId, category, amount);
@@ -72,7 +72,7 @@ class BudgetController extends GetxController {
 
 // Method to update a budget for a specific category
   Future<void> updateBudget(String category, double amount) async {
-    String userId = _authController.userId.value;
+    String userId = _authService.userId!;
 
     if (budgets.containsKey(category)) {
       await budgetService.updateBudget(userId, category, amount);
@@ -93,7 +93,7 @@ class BudgetController extends GetxController {
 
   // Method to delete a budget for a specific category
   Future<void> deleteBudget(String category) async {
-    String userId = _authController.userId.value;
+    String userId = _authService.userId!;
     if (budgets.containsKey(category)) {
       await budgetService.deleteBudget(userId, category);
       budgets.remove(category); // Update local state
