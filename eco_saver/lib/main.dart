@@ -15,23 +15,33 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  Get.put<ColorController>(ColorController());
   // Initialize global AuthService
   Get.put<AuthService>(AuthService());
 
-  Get.put<ColorController>(ColorController());
   Get.put<ButtonsController>(ButtonsController());
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  MyApp({super.key});
+  final ColorController _colorController = Get.find<ColorController>();
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        //primarySwatch: Colors.blue,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor:
+              _colorController.colorScheme.value.primary, // Cursor color
+          //selectionColor: Colors.yellow, // Highlighted text color
+          selectionHandleColor: _colorController
+              .colorScheme.value.primary, // Handle (bubble) color
+        ),
+      ),
       getPages: [
         // Splash screen route
         GetPage(

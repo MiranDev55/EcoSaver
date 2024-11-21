@@ -11,24 +11,6 @@ class ExpenseController extends GetxController {
   RxMap<String, Map<String, List<Expense>>> monthlyExpense =
       RxMap<String, Map<String, List<Expense>>>();
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-
-  //   // Watch for changes in the user ID and fetch expenses when it changes
-  //   ever(authController.userId, (String userId) {
-  //     //print("userId for Expenses = $userId");
-  //     if (userId.isNotEmpty) {
-  //       //print("userId for Expenses = $userId");
-  //       getUserExpensesForCurrentMonth(userId);
-  //     } else {
-  //       //print("userId for Expenses = $userId");
-  //       // Clear the expenses if the user is not logged in
-  //       monthlyExpense.clear();
-  //     }
-  //   });
-  // }
-
   @override
   void onInit() {
     super.onInit();
@@ -111,7 +93,7 @@ class ExpenseController extends GetxController {
           documentId: [expense]
         };
       }
-
+      monthlyExpense.refresh();
       return documentId;
     } catch (e) {
       // Handle any errors that occur during the Firestore operation

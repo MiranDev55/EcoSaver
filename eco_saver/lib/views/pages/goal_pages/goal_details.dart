@@ -111,6 +111,7 @@ class GoalDetails extends StatelessWidget {
           )
         ],
       ),
+      backgroundColor: colorController.colorScheme.value.surface,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {

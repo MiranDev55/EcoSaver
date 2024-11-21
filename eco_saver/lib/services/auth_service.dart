@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_saver/controllers/color_controller.dart';
 import 'package:eco_saver/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthService extends GetxController {
   static AuthService instance = Get.find();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final ColorController _colorController = Get.find<ColorController>();
 
   var userModel = Rxn<UserModel>(); // Observable UserModel, starts as null
 
@@ -70,7 +73,9 @@ class AuthService extends GetxController {
       await fetchUserData(); // Fetch and store user data in userModel after login
       Get.offAllNamed("/landing");
     } catch (e) {
-      Get.snackbar("Error logging in", e.toString());
+      //showErrorSnackbar(e.toString());
+      showErrorSnackbar("Invalid Email or Password",
+          title: "Wrong Credentials");
     }
   }
 
@@ -102,5 +107,21 @@ class AuthService extends GetxController {
     await auth.signOut();
     userModel.value = null; // Clear user data on logout
     Get.offAllNamed("/login");
+  }
+
+  void showErrorSnackbar(String message, {String title = 'Error'}) {
+    Get.snackbar(
+      title,
+      message,
+      icon: const Icon(Icons.error, color: Colors.white),
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: _colorController.colorScheme.value.error,
+      borderRadius: 8,
+      margin: const EdgeInsets.all(16),
+      colorText: _colorController.colorScheme.value.onError,
+      duration: const Duration(seconds: 5),
+      isDismissible: true,
+      forwardAnimationCurve: Curves.easeOutBack,
+    );
   }
 }

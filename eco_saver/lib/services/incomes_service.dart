@@ -11,21 +11,6 @@ class IncomeController extends GetxController {
   RxMap<String, Map<String, List<Income>>> monthlyIncome =
       RxMap<String, Map<String, List<Income>>>();
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-
-  //   // Watch for changes in the user ID and fetch incomes when it changes
-  //   ever(authController.userId, (String userId) {
-  //     if (userId.isNotEmpty) {
-  //       getUserIncomesForCurrentMonth(userId);
-  //     } else {
-  //       // Clear the incomes if the user is not logged in
-  //       monthlyIncome.clear();
-  //     }
-  //   });
-  // }
-
   @override
   void onInit() {
     super.onInit();
@@ -108,7 +93,7 @@ class IncomeController extends GetxController {
           documentId: [income]
         };
       }
-
+      monthlyIncome.refresh();
       return documentId;
     } catch (e) {
       // Handle any errors that occur during the Firestore operation

@@ -22,6 +22,7 @@ class AddGoalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _colorController.colorScheme.value.surface,
       appBar: CustomAppBar2(title: "Add Goal"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

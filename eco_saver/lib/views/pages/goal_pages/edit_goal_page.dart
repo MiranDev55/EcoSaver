@@ -30,6 +30,7 @@ class EditGoalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar2(title: "Edit Goal"),
+      backgroundColor: colorController.colorScheme.value.surface,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
