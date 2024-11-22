@@ -56,6 +56,7 @@ class EditTransactionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar2(title: title),
+      backgroundColor: _colorController.colorScheme.value.surface,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(

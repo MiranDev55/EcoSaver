@@ -72,6 +72,7 @@ class CustomDateSelector extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: colorController.colorScheme.value.surface,
           title: Text(
             'Select Month and Year',
             style: TextStyle(color: colorController.colorScheme.value.primary),

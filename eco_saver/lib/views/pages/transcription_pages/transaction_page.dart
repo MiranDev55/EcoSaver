@@ -30,16 +30,6 @@ class TransactionPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // TransactionDateSelector(
-                //   initialDate: transactionsController.chosenDate,
-                //   onMonthChanged: (selectedDate) {
-                //     // Update both expenses and incomes for the selected month
-                //     transactionsController.filterExpensesByMonth(selectedDate);
-                //     transactionsController.filterIncomesByMonth(selectedDate);
-                //   },
-                //   colorController: colorController,
-                // ),
-
                 // Use the new CustomDateSelector
                 CustomDateSelector(
                   initialDate: transactionsController.chosenDate,
