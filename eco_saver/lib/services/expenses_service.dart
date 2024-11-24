@@ -201,6 +201,8 @@ class ExpenseController extends GetxController {
       // If the Firestore operation is successful, remove the expense from the cache
       if (monthlyExpense.containsKey(cacheKey)) {
         monthlyExpense[cacheKey]!.remove(expenseId);
+
+        monthlyExpense.refresh();
       }
     } catch (e) {
       // Handle any errors that occur during the Firestore operation

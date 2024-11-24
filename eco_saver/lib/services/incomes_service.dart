@@ -205,6 +205,9 @@ class IncomeController extends GetxController {
       // If the Firestore operation is successful, remove the income from the cache
       if (monthlyIncome.containsKey(cacheKey)) {
         monthlyIncome[cacheKey]!.remove(incomeId);
+
+        // Notify that the entity has been deleted
+        monthlyIncome.refresh();
       }
     } catch (e) {
       // Handle any errors that occur during the Firestore operation

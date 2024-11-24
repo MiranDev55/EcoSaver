@@ -75,6 +75,8 @@ class AddExpensePage extends StatelessWidget {
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 value: selectedCategory,
+                dropdownColor: _colorController.colorScheme.value
+                    .surface, // Set your desired background color
                 decoration: customInputDecoration(
                     labelText: 'Category',
                     borderColor: _colorController.colorScheme.value.onSecondary,
@@ -115,6 +117,24 @@ class AddExpensePage extends StatelessWidget {
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2101),
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                dialogBackgroundColor: _colorController
+                                    .colorScheme
+                                    .value
+                                    .surface, // Change the background color
+                                colorScheme: ColorScheme.light(
+                                  primary: _colorController.colorScheme.value
+                                      .secondary, // Header background color
+                                  onPrimary: Colors.white, // Header text color
+                                  onSurface: _colorController.colorScheme.value
+                                      .primary, // Body text color
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
 
                         if (pickedDate != null) {
@@ -140,9 +160,110 @@ class AddExpensePage extends StatelessWidget {
                       ),
                       onTap: () async {
                         TimeOfDay? pickedTime = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                            builder: (BuildContext context, Widget? child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  dialogBackgroundColor: Colors
+                                      .blue[50], // Change background color
+                                  colorScheme: ColorScheme.light(
+                                    primary: _colorController.colorScheme.value
+                                        .surface, // Header background color
+                                    onPrimary: _colorController.colorScheme
+                                        .value.onSurface, // Header text color
+                                    onSurface: _colorController
+                                        .colorScheme
+                                        .value
+                                        .surface, // Text color in the dialog
+                                  ),
+                                  timePickerTheme: TimePickerThemeData(
+                                    backgroundColor: _colorController
+                                        .colorScheme
+                                        .value
+                                        .surface, // Background of the picker
+                                    hourMinuteShape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      side: BorderSide(
+                                        color: _colorController
+                                            .colorScheme.value.secondary,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    hourMinuteTextStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: _colorController.colorScheme.value
+                                          .onSurface, // Text color for hours and minutes
+                                    ),
+                                    hourMinuteTextColor:
+                                        WidgetStateColor.resolveWith(
+                                            (Set<WidgetState> states) {
+                                      if (states
+                                          .contains(WidgetState.selected)) {
+                                        return _colorController
+                                            .colorScheme
+                                            .value
+                                            .onSurface; // Selected segment text color
+                                      }
+                                      return _colorController
+                                          .colorScheme.value.onSurface
+                                          .withOpacity(
+                                              0.8); // Unselected segment text color
+                                    }),
+                                    dialHandColor: _colorController.colorScheme
+                                        .value.secondary, // Dial hand color
+                                    dialBackgroundColor: _colorController
+                                        .colorScheme
+                                        .value
+                                        .surface, // Dial background color
+                                    dialTextColor: WidgetStateColor.resolveWith(
+                                        (Set<WidgetState> states) {
+                                      if (states
+                                          .contains(WidgetState.selected)) {
+                                        return _colorController
+                                            .colorScheme
+                                            .value
+                                            .onSurface; // Selected number color
+                                      }
+                                      return _colorController
+                                          .colorScheme.value.onSurface
+                                          .withOpacity(
+                                              0.6); // Unselected numbers color
+                                    }),
+                                    dayPeriodColor:
+                                        WidgetStateColor.resolveWith(
+                                            (Set<WidgetState> states) {
+                                      if (states
+                                          .contains(WidgetState.selected)) {
+                                        return _colorController
+                                            .colorScheme
+                                            .value
+                                            .primary; // Selected AM/PM background color
+                                      }
+                                      return _colorController.colorScheme.value
+                                          .surface; // Unselected AM/PM background color
+                                    }),
+                                    dayPeriodTextColor:
+                                        WidgetStateColor.resolveWith(
+                                            (Set<WidgetState> states) {
+                                      if (states
+                                          .contains(WidgetState.selected)) {
+                                        return _colorController
+                                            .colorScheme
+                                            .value
+                                            .onPrimary; // Selected AM/PM text color
+                                      }
+                                      return _colorController
+                                          .colorScheme.value.onSurface
+                                          .withOpacity(
+                                              0.6); // Unselected AM/PM text color
+                                    }),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            });
 
                         if (pickedTime != null) {
                           timeController.text =
